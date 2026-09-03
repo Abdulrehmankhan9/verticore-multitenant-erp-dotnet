@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\VertiCore.Application\VertiCore.Application\VertiCore.Application.csproj" />
+    <ProjectReference Include="..\..\VertiCore.Domain\VertiCore.Domain\VertiCore.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
