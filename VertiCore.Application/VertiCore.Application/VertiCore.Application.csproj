@@ -10,4 +10,13 @@
     <ProjectReference Include="..\..\VertiCore.Domain\VertiCore.Domain\VertiCore.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\Auth\" />
+    <Folder Include="DTOs\Client\" />
+    <Folder Include="DTOs\Invoice\" />
+    <Folder Include="DTOs\Dashboard\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

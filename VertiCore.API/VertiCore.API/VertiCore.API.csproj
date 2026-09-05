@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -13,6 +13,11 @@
   <ItemGroup>
     <ProjectReference Include="..\..\VertiCore.Application\VertiCore.Application\VertiCore.Application.csproj" />
     <ProjectReference Include="..\..\VertiCore.Infrastructure\VertiCore.Infrastructure\VertiCore.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Middleware\" />
   </ItemGroup>
 
 </Project>

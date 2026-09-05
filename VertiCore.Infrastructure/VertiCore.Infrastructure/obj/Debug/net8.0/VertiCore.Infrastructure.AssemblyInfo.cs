@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VertiCore.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45b9ef595fc7f2e1ddcd99f870a36601c865e734")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc719975687f4eb56b77fd889e9110488263194d")]
 [assembly: System.Reflection.AssemblyProductAttribute("VertiCore.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VertiCore.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

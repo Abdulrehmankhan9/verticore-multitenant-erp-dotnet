@@ -11,4 +11,10 @@
     <ProjectReference Include="..\..\VertiCore.Domain\VertiCore.Domain\VertiCore.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="Services\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>
