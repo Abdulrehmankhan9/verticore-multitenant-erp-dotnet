@@ -1,4 +1,4 @@
-# VertiCore � Multi-Tenant Business ERP (.NET)
+﻿# VertiCore — Multi-Tenant Business ERP (.NET)
 
 ## What is VertiCore?
 A multi-tenant business management system built with ASP.NET Core.
@@ -18,11 +18,11 @@ role-based, real-time platform.
 - Clean Architecture
 
 ## Architecture
-- Domain � Entities, Enums, Interfaces
-- Application � Business Logic, Services, DTOs
-- Infrastructure � Database, Repositories
-- API � Controllers, Middleware
-- Web � Razor Pages UI
+- Domain — Entities, Enums, Interfaces
+- Application — Business Logic, Services, DTOs
+- Infrastructure — Database, Repositories
+- API — Controllers, Middleware
+- Web — Razor Pages UI
 
 ## Features
 - [ ] Multi-tenant data isolation
@@ -33,12 +33,48 @@ role-based, real-time platform.
 - [ ] Audit logging
 
 ## Progress
-- [x] Phase 0 � Solution setup complete
-- [ ] Phase 1 � Domain layer
-- [ ] Phase 2 � Auth system
-- [ ] Phase 3 � Core modules
-- [ ] Phase 4 � Advanced features
-- [ ] Phase 5 � Polish & deploy
+- [x] Phase 0 — Solution setup complete
+- [ ] Phase 1 — Domain layer
+- [ ] Phase 2 — Auth system
+- [ ] Phase 3 — Core modules
+- [ ] Phase 4 — Advanced features
+- [ ] Phase 5 — Polish & deploy
 
-## Live Demo
-Coming soon...
+## VertiCore — Complete Scaffold Structure
+
+```
+Solution 'VertiCore'/
+│
+├── VertiCore.Domain/
+│   ├── Entities/
+│   ├── Enums/
+│   └── Interfaces/
+│
+├── VertiCore.Application/
+│   ├── DTOs/
+│   │   ├── Auth/
+│   │   ├── Client/
+│   │   ├── Invoice/
+│   │   └── Dashboard/
+│   ├── Services/
+│   └── Interfaces/
+│
+├── VertiCore.Infrastructure/
+│   ├── Data/
+│   │   └── Migrations/
+│   ├── Repositories/
+│   └── Services/
+│
+├── VertiCore.API/
+│   ├── Controllers/
+│   ├── Middleware/
+│   └── Extensions/
+│
+└── VertiCore.Web/
+    ├── Pages/
+    │   ├── Auth/
+    │   ├── Dashboard/
+    │   ├── Clients/
+    │   └── Invoices/
+    └── wwwroot/
+```
