@@ -11,8 +11,7 @@
         public string Details { get; set; } = string.Empty;
         public string IPAddress { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         public Tenant Tenant { get; set; } = null!;
-        public User User { get; set; } = null!;
+        public User PerformedBy { get; set; } = null!;
     }
 }
