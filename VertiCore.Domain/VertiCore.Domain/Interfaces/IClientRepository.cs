@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VertiCore.Domain.Entities;
 
 namespace VertiCore.Domain.Interfaces
 {
-    internal class IClientRepository
+    public interface IClientRepository : IRepository<Client>
     {
+        Task<List<Client>> SearchAsync(string keyword);
     }
 }

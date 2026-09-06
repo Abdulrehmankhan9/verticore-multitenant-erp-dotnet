@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VertiCore.Domain.Entities;
 
 namespace VertiCore.Domain.Interfaces
 {
-    internal class IInvoiceRepository
+    public interface IInvoiceRepository : IRepository<Invoice>
     {
+        Task<List<Invoice>> GetOverdueInvoicesAsync(Guid tenantId);
     }
 }
