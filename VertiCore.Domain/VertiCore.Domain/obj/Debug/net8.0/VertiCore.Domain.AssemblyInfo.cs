@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VertiCore.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6174c0f425e81261c382edc921473dc3dce44f80")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+54fab91c5e625c383f8f3b284ff38deaf9a36841")]
 [assembly: System.Reflection.AssemblyProductAttribute("VertiCore.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VertiCore.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
