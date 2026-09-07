@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VertiCore.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b11beac532fcb0af9985b0630fd558f1fad25dc0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+93c478bce2847050b0c33b3a912ad15c44952f47")]
 [assembly: System.Reflection.AssemblyProductAttribute("VertiCore.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VertiCore.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

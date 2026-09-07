@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace VertiCore.Application.DTOs.Client
+﻿namespace VertiCore.Application.DTOs.Auth
 {
-    internal class RegisterRequest
+    public class RegisterRequest
     {
+        public string TenantName { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VertiCore.Domain.Enums;
 
 namespace VertiCore.Application.DTOs.Invoice
 {
-    internal class InvoiceDto
+    public class InvoiceDto
     {
+        public Guid Id { get; set; }
+        public string InvoiceNumber { get; set; } = string.Empty;
+        public string ClientName { get; set; } = string.Empty;
+        public InvoiceStatus Status { get; set; }
+        public decimal TotalAmount { get; set; }
+        public DateTime DueDate { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
