@@ -35,7 +35,7 @@ role-based, real-time platform.
 ## Progress
 - [x] Phase 0 — Solution setup complete
 - [x] Phase 1 — Domain layer (Entities + Enums complete)
-- [ ] Phase 2 — Auth system
+- [x] Phase 2 — Auth system (Register + Login working with JWT)
 - [ ] Phase 3 — Core modules
 - [ ] Phase 4 — Advanced features
 - [ ] Phase 5 — Polish & deploy
