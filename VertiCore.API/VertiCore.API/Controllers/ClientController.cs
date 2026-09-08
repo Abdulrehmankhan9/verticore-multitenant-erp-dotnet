@@ -11,16 +11,24 @@ namespace VertiCore.API.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IClientService _clientService;
+        private readonly IAuditLogService _auditLogService;
 
-        public ClientController(IClientService clientService)
+        public ClientController(IClientService clientService, IAuditLogService auditLogService)
         {
             _clientService = clientService;
+            _auditLogService = auditLogService;
         }
 
         private Guid GetTenantId()
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
             return Guid.Parse(tenantIdClaim!);
+        }
+
+        private Guid GetUserId()
+        {
+            var userIdClaim = User.FindFirst("UserId")?.Value;
+            return Guid.Parse(userIdClaim!);
         }
 
         [HttpGet]
@@ -47,7 +55,11 @@ namespace VertiCore.API.Controllers
         public async Task<IActionResult> Create(CreateClientRequest request)
         {
             var tenantId = GetTenantId();
+            var userId = GetUserId();
             var client = await _clientService.CreateAsync(request, tenantId);
+
+            await _auditLogService.LogAsync(tenantId, userId, "Create", "Client", client.Id.ToString(), $"Created client: {client.FullName}");
+
             return CreatedAtAction(nameof(GetById), new { id = client.Id }, client);
         }
 
@@ -55,7 +67,11 @@ namespace VertiCore.API.Controllers
         public async Task<IActionResult> Update(Guid id, UpdateClientRequest request)
         {
             var tenantId = GetTenantId();
+            var userId = GetUserId();
             await _clientService.UpdateAsync(id, request, tenantId);
+
+            await _auditLogService.LogAsync(tenantId, userId, "Update", "Client", id.ToString(), $"Updated client: {request.FullName}");
+
             return NoContent();
         }
 
@@ -63,7 +79,11 @@ namespace VertiCore.API.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var tenantId = GetTenantId();
+            var userId = GetUserId();
             await _clientService.DeleteAsync(id, tenantId);
+
+            await _auditLogService.LogAsync(tenantId, userId, "Delete", "Client", id.ToString(), "Deleted client");
+
             return NoContent();
         }
     }
