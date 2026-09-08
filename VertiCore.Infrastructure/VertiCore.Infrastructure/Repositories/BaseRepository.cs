@@ -37,5 +37,10 @@ namespace VertiCore.Infrastructure.Repositories
         {
             _context.Set<T>().Remove(entity);
         }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

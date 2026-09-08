@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "KOIgTHV4Y8w=",
+  "dgSpecHash": "Z3hditYe5/M=",
   "success": true,
   "projectFilePath": "C:\\Users\\T15 GEN 1\\source\\repos\\VertiCore\\VertiCore.Application\\VertiCore.Application\\VertiCore.Application.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\T15 GEN 1\\.nuget\\packages\\bcrypt.net-next\\4.2.0\\bcrypt.net-next.4.2.0.nupkg.sha512"
+  ],
   "logs": []
 }
