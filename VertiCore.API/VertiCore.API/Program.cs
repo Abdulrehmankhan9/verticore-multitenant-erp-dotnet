@@ -89,6 +89,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<VertiCore.API.Middleware.ExceptionMiddleware>();  
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
