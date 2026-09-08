@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\VertiCore.Domain\VertiCore.Domain\VertiCore.Domain.csproj" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.30" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+    <ProjectReference Include="..\..\VertiCore.Domain\VertiCore.Domain\VertiCore.Domain.csproj" />
   </ItemGroup>
 
 </Project>

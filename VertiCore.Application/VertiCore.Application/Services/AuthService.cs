@@ -1,4 +1,5 @@
-﻿using VertiCore.Application.DTOs.Auth;
+﻿using BCrypt.Net;
+using VertiCore.Application.DTOs.Auth;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
 using VertiCore.Domain.Enums;
@@ -10,11 +11,16 @@ namespace VertiCore.Application.Services
     {
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<User> _userRepository;
+        private readonly IJwtService _jwtService;
 
-        public AuthService(IRepository<Tenant> tenantRepository, IRepository<User> userRepository)
+        public AuthService(
+            IRepository<Tenant> tenantRepository,
+            IRepository<User> userRepository,
+            IJwtService jwtService)
         {
             _tenantRepository = tenantRepository;
             _userRepository = userRepository;
+            _jwtService = jwtService;
         }
 
         public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
@@ -46,9 +52,11 @@ namespace VertiCore.Application.Services
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
 
+            var token = _jwtService.GenerateToken(user);
+
             return new AuthResponse
             {
-                Token = "temp-token",
+                Token = token,
                 FullName = user.FullName,
                 Email = user.Email,
                 Role = user.Role.ToString()
@@ -57,7 +65,23 @@ namespace VertiCore.Application.Services
 
         public async Task<AuthResponse> LoginAsync(LoginRequest request)
         {
-            throw new NotImplementedException();
+            var users = await _userRepository.GetAllAsync();
+            var user = users.FirstOrDefault(u => u.Email == request.Email);
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                throw new UnauthorizedAccessException("Invalid email or password");
+            }
+
+            var token = _jwtService.GenerateToken(user);
+
+            return new AuthResponse
+            {
+                Token = token,
+                FullName = user.FullName,
+                Email = user.Email,
+                Role = user.Role.ToString()
+            };
         }
     }
 }
