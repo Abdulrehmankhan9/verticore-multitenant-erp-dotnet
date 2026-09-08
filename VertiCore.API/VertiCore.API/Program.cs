@@ -25,6 +25,7 @@ builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 // Service registrations
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:SecretKey"];
