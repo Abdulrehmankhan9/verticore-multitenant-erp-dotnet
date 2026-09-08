@@ -17,6 +17,17 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowWebApp", policy =>
+    {
+        policy.WithOrigins("https://localhost:7101")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Repository registrations
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
@@ -89,8 +100,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<VertiCore.API.Middleware.ExceptionMiddleware>();  
+app.UseMiddleware<VertiCore.API.Middleware.ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
+
+app.UseCors("AllowWebApp");
 
 app.UseAuthentication();
 app.UseAuthorization();
