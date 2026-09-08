@@ -306,6 +306,10 @@
               "target": "Package",
               "version": "[8.22.0, )"
             },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2026.8.0, )"
+            },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[8.22.0, )"

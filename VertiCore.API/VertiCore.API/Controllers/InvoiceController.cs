@@ -11,10 +11,12 @@ namespace VertiCore.API.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceService _invoiceService;
+        private readonly IPdfService _pdfService;
 
-        public InvoiceController(IInvoiceService invoiceService)
+        public InvoiceController(IInvoiceService invoiceService, IPdfService pdfService)
         {
             _invoiceService = invoiceService;
+            _pdfService = pdfService;
         }
 
         private Guid GetTenantId()
@@ -45,6 +47,13 @@ namespace VertiCore.API.Controllers
             var tenantId = GetTenantId();
             var invoices = await _invoiceService.GetOverdueAsync(tenantId);
             return Ok(invoices);
+        }
+
+        [HttpGet("{id}/pdf")]
+        public IActionResult DownloadPdf(Guid id)
+        {
+            var pdfBytes = _pdfService.GenerateInvoicePdf(id);
+            return File(pdfBytes, "application/pdf", $"invoice_{id}.pdf");
         }
     }
 }
