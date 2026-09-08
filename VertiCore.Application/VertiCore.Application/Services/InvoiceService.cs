@@ -22,6 +22,16 @@ namespace VertiCore.Application.Services
             var invoices = await _invoiceRepository.GetAllAsync();
             var tenantInvoices = invoices.Where(i => i.TenantId == tenantId).ToList();
 
+            foreach (var invoice in tenantInvoices)
+            {
+                if (invoice.DueDate < DateTime.UtcNow && invoice.Status != InvoiceStatus.Paid && invoice.Status != InvoiceStatus.Overdue)
+                {
+                    invoice.Status = InvoiceStatus.Overdue;
+                    _invoiceRepository.Update(invoice);
+                }
+            }
+            await _invoiceRepository.SaveChangesAsync();
+
             var result = new List<InvoiceDto>();
             foreach (var invoice in tenantInvoices)
             {
