@@ -1,0 +1,135 @@
+﻿@page
+@model VertiCore.Web.Pages.Invoices.CreateModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "New Invoice";
+}
+
+<h2 class="mb-4">New Invoice</h2>
+
+<div class="card border-0 shadow-sm" style="max-width: 700px;">
+    <div class="card-body p-4">
+        <div id="errorAlert" class="alert alert-danger d-none" role="alert"></div>
+
+        <form id="invoiceForm">
+            <div class="mb-3">
+                <label class="form-label">Client</label>
+                <select class="form-select" id="clientId" required>
+                    <option value="">Loading clients...</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Due Date</label>
+                <input type="date" class="form-control" id="dueDate" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" id="notes" rows="2"></textarea>
+            </div>
+
+            <label class="form-label">Items</label>
+            <div id="itemsContainer">
+                <div class="row g-2 mb-2 item-row">
+                    <div class="col-5">
+                        <input type="text" class="form-control item-desc" placeholder="Description" required />
+                    </div>
+                    <div class="col-2">
+                        <input type="number" class="form-control item-qty" placeholder="Qty" value="1" min="1" required />
+                    </div>
+                    <div class="col-3">
+                        <input type="number" class="form-control item-price" placeholder="Unit Price" required />
+                    </div>
+                    <div class="col-2">
+                        <button type="button" class="btn btn-outline-danger w-100 remove-item">×</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-dark mb-3" id="addItemBtn">+ Add Item</button>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-dark" id="saveBtn">Create Invoice</button>
+                <a asp-page="/Invoices/Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/Auth/Login';
+
+        async function loadClients() {
+            const response = await fetch('https://localhost:7153/api/Client', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const clients = await response.json();
+            const select = document.getElementById('clientId');
+            select.innerHTML = clients.map(c => `<option value="${c.id}">${c.fullName}</option>`).join('');
+        }
+        loadClients();
+
+        document.getElementById('addItemBtn').addEventListener('click', function () {
+            const container = document.getElementById('itemsContainer');
+            const newRow = document.createElement('div');
+            newRow.className = 'row g-2 mb-2 item-row';
+            newRow.innerHTML = `
+                <div class="col-5"><input type="text" class="form-control item-desc" placeholder="Description" required /></div>
+                <div class="col-2"><input type="number" class="form-control item-qty" placeholder="Qty" value="1" min="1" required /></div>
+                <div class="col-3"><input type="number" class="form-control item-price" placeholder="Unit Price" required /></div>
+                <div class="col-2"><button type="button" class="btn btn-outline-danger w-100 remove-item">×</button></div>
+            `;
+            container.appendChild(newRow);
+        });
+
+        document.getElementById('itemsContainer').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-item')) {
+                e.target.closest('.item-row').remove();
+            }
+        });
+
+        document.getElementById('invoiceForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const errorAlert = document.getElementById('errorAlert');
+            const saveBtn = document.getElementById('saveBtn');
+
+            const items = Array.from(document.querySelectorAll('.item-row')).map(row => ({
+                description: row.querySelector('.item-desc').value,
+                quantity: parseInt(row.querySelector('.item-qty').value),
+                unitPrice: parseFloat(row.querySelector('.item-price').value)
+            }));
+
+            const payload = {
+                clientId: document.getElementById('clientId').value,
+                dueDate: document.getElementById('dueDate').value,
+                notes: document.getElementById('notes').value,
+                items: items
+            };
+
+            errorAlert.classList.add('d-none');
+            saveBtn.disabled = true;
+            saveBtn.innerText = 'Creating...';
+
+            try {
+                const response = await fetch('https://localhost:7153/api/Invoice', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error('Failed to create invoice');
+
+                window.location.href = '/Invoices/Index';
+            } catch (error) {
+                errorAlert.innerText = error.message;
+                errorAlert.classList.remove('d-none');
+                saveBtn.disabled = false;
+                saveBtn.innerText = 'Create Invoice';
+            }
+        });
+    </script>
+}
