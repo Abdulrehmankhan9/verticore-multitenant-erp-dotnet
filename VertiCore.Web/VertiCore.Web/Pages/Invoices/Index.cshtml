@@ -64,7 +64,7 @@
                             <td><span class="badge bg-${statusColor[statusText]}">${statusText}</span></td>
                             <td>PKR ${inv.totalAmount.toLocaleString()}</td>
                             <td>${new Date(inv.dueDate).toLocaleDateString()}</td>
-                            <td><a href="https://localhost:7153/api/Invoice/${inv.id}/pdf" class="btn btn-sm btn-outline-dark" target="_blank">PDF</a></td>
+                            <td><button class="btn btn-sm btn-outline-dark download-pdf" data-id="${inv.id}">PDF</button></td>
                         </tr>`;
                     }).join('');
                 }
@@ -74,5 +74,23 @@
         }
 
         loadInvoices();
+
+        document.getElementById('invoicesBody').addEventListener('click', async function (e) {
+            if (e.target.classList.contains('download-pdf')) {
+                const id = e.target.dataset.id;
+                const token = localStorage.getItem('token');
+
+                const response = await fetch(`https://localhost:7153/api/Invoice/${id}/pdf`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `invoice_${id}.pdf`;
+                a.click();
+            }
+        });
     </script>
 }

@@ -1,8 +1,9 @@
-﻿namespace VertiCore.Domain.Entities
+﻿using VertiCore.Domain.Common;
+
+namespace VertiCore.Domain.Entities
 {
-    public class AuditLog
+    public class AuditLog : BaseEntity
     {
-        public Guid Id { get; set; }
         public Guid TenantId { get; set; }
         public Guid UserId { get; set; }
         public string Action { get; set; } = string.Empty;
@@ -10,7 +11,7 @@
         public string EntityId { get; set; } = string.Empty;
         public string Details { get; set; } = string.Empty;
         public string IPAddress { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
         public Tenant Tenant { get; set; } = null!;
         public User PerformedBy { get; set; } = null!;
     }

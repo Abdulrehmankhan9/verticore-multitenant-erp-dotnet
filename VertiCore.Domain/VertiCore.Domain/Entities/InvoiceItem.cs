@@ -1,8 +1,9 @@
-﻿namespace VertiCore.Domain.Entities
+﻿using VertiCore.Domain.Common;
+
+namespace VertiCore.Domain.Entities
 {
-    public class InvoiceItem
+    public class InvoiceItem : BaseEntity
     {
-        public Guid Id { get; set; }
         public Guid InvoiceId { get; set; }
         public string Description { get; set; } = string.Empty;
         public int Quantity { get; set; }
