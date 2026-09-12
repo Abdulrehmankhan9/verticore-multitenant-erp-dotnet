@@ -1,4 +1,4 @@
-﻿using VertiCore.Domain.Enums;
+using VertiCore.Domain.Enums;
 
 namespace VertiCore.Application.DTOs.Invoice
 {

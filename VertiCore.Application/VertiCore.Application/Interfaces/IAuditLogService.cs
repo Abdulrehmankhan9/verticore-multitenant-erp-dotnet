@@ -1,4 +1,4 @@
-﻿using VertiCore.Application.DTOs.AuditLog;
+using VertiCore.Application.DTOs.AuditLog;
 
 namespace VertiCore.Application.Interfaces
 {

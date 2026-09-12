@@ -1,13 +1,18 @@
-ï»¿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using VertiCore.Domain.Entities;
+using VertiCore.Application.Interfaces;
 
 namespace VertiCore.Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        private readonly ICurrentTenantService? _currentTenantService;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options,
+            ICurrentTenantService? currentTenantService = null)
             : base(options)
         {
+            _currentTenantService = currentTenantService;
         }
 
         public DbSet<Tenant> Tenants { get; set; }
@@ -19,6 +24,22 @@ namespace VertiCore.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var tenantId = _currentTenantService?.TenantId;
+
+            // Global Query Filters — Multi-tenancy
+            modelBuilder.Entity<Client>()
+                .HasQueryFilter(c => tenantId == null || c.TenantId == tenantId);
+
+            modelBuilder.Entity<Invoice>()
+                .HasQueryFilter(i => tenantId == null || i.TenantId == tenantId);
+
+            modelBuilder.Entity<AuditLog>()
+                .HasQueryFilter(a => tenantId == null || a.TenantId == tenantId);
+
+            modelBuilder.Entity<User>()
+                .HasQueryFilter(u => tenantId == null || u.TenantId == tenantId);
+
+            // Cascade fix
             modelBuilder.Entity<Invoice>()
                 .HasOne(i => i.Tenant)
                 .WithMany()

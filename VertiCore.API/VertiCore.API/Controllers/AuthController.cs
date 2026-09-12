@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using VertiCore.Application.DTOs.Auth;
 using VertiCore.Application.Interfaces;
 

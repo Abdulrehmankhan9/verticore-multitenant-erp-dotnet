@@ -1,4 +1,4 @@
-﻿using VertiCore.Application.DTOs.Dashboard;
+using VertiCore.Application.DTOs.Dashboard;
 
 namespace VertiCore.Application.Interfaces
 {

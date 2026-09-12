@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Application.Interfaces
+namespace VertiCore.Application.Interfaces
 {
     public interface IPdfService
     {

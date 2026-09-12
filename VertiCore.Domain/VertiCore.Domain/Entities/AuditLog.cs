@@ -1,4 +1,4 @@
-﻿using VertiCore.Domain.Common;
+using VertiCore.Domain.Common;
 
 namespace VertiCore.Domain.Entities
 {

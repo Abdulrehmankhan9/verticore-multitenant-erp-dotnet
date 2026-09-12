@@ -1,4 +1,4 @@
-﻿using VertiCore.Application.DTOs.Invoice;
+using VertiCore.Application.DTOs.Invoice;
 
 namespace VertiCore.Application.Interfaces
 {

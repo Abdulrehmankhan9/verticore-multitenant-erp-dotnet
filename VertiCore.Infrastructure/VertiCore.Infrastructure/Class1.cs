@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Infrastructure
+namespace VertiCore.Infrastructure
 {
     public class Class1
     {

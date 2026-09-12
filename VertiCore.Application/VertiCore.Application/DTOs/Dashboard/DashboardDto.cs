@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Application.DTOs.Dashboard
+namespace VertiCore.Application.DTOs.Dashboard
 {
     public class DashboardDto
     {

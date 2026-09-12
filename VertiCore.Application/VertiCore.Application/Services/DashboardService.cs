@@ -1,7 +1,7 @@
-﻿using VertiCore.Application.DTOs.Dashboard;
+using VertiCore.Application.DTOs.Dashboard;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Enums;
-using VertiCore.Domain.Interfaces;
+using VertiCore.Application.Interfaces;
 
 namespace VertiCore.Application.Services
 {

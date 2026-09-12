@@ -1,4 +1,4 @@
-﻿using VertiCore.Application.DTOs.Client;
+using VertiCore.Application.DTOs.Client;
 
 namespace VertiCore.Application.Interfaces
 {

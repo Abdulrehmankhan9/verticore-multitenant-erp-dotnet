@@ -1,7 +1,7 @@
-﻿using VertiCore.Application.DTOs.Client;
+using VertiCore.Application.DTOs.Client;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
-using VertiCore.Domain.Interfaces;
+using VertiCore.Application.Interfaces;
 
 namespace VertiCore.Application.Services
 {

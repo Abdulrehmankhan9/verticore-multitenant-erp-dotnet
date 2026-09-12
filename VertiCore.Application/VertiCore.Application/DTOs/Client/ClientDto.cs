@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Application.DTOs.Client
+namespace VertiCore.Application.DTOs.Client
 {
     public class ClientDto
     {

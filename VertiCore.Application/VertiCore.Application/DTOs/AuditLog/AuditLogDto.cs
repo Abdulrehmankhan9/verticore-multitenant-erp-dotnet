@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Application.DTOs.AuditLog
+namespace VertiCore.Application.DTOs.AuditLog
 {
     public class AuditLogDto
     {

@@ -4,7 +4,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using VertiCore.Application.Interfaces;
 using VertiCore.Application.Services;
-using VertiCore.Domain.Interfaces;
 using VertiCore.Infrastructure.Data;
 using VertiCore.Infrastructure.Repositories;
 using VertiCore.Infrastructure.Services;
@@ -28,6 +27,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// HttpContext Accessor
+builder.Services.AddHttpContextAccessor();
+
 // Repository registrations
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
@@ -41,6 +43,7 @@ builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:SecretKey"];
@@ -61,7 +64,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -93,7 +95,6 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

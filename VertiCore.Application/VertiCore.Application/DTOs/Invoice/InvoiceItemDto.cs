@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Application.DTOs.Invoice
+namespace VertiCore.Application.DTOs.Invoice
 {
     public class InvoiceItemDto
     {

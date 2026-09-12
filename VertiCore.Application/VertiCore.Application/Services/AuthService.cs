@@ -1,9 +1,9 @@
-﻿using BCrypt.Net;
+using BCrypt.Net;
 using VertiCore.Application.DTOs.Auth;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
 using VertiCore.Domain.Enums;
-using VertiCore.Domain.Interfaces;
+using VertiCore.Application.Interfaces;
 
 namespace VertiCore.Application.Services
 {

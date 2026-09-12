@@ -1,4 +1,4 @@
-﻿using VertiCore.Application.DTOs.Auth;
+using VertiCore.Application.DTOs.Auth;
 
 namespace VertiCore.Application.Interfaces
 {

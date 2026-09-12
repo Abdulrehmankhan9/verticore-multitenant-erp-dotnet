@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Domain.Enums
+namespace VertiCore.Domain.Enums
 {
     public enum InvoiceStatus
     {

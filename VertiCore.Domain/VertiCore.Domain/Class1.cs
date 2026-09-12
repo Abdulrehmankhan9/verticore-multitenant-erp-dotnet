@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Domain
+namespace VertiCore.Domain
 {
     public class Class1
     {

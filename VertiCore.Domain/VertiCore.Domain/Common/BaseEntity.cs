@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Domain.Common
+namespace VertiCore.Domain.Common
 {
     public abstract class BaseEntity
     {

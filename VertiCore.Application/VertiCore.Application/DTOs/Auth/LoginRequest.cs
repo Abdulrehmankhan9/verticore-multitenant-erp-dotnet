@@ -1,4 +1,4 @@
-﻿namespace VertiCore.Application.DTOs.Auth
+namespace VertiCore.Application.DTOs.Auth
 {
     public class LoginRequest
     {
