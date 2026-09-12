@@ -3,7 +3,6 @@ using VertiCore.Application.DTOs.Auth;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
 using VertiCore.Domain.Enums;
-using VertiCore.Application.Interfaces;
 
 namespace VertiCore.Application.Services
 {

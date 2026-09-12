@@ -1,7 +1,6 @@
 using VertiCore.Application.DTOs.AuditLog;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
-using VertiCore.Application.Interfaces;
 
 namespace VertiCore.Application.Services
 {
