@@ -102,6 +102,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<VertiCore.API.Middleware.ExceptionMiddleware>();
+app.UseMiddleware<VertiCore.API.Middleware.TenantMiddleware>();
 
 app.UseHttpsRedirection();
 

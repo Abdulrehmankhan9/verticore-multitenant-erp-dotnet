@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using VertiCore.Application.Interfaces;
 
-namespace VertiCore.Infrastructure.Services
+namespace VertiCore.Application.Services
 {
     public class CurrentTenantService : ICurrentTenantService
     {
@@ -9,9 +9,9 @@ namespace VertiCore.Infrastructure.Services
 
         public CurrentTenantService(IHttpContextAccessor httpContextAccessor)
         {
-            var claim = httpContextAccessor.HttpContext?.User?.FindFirst("TenantId")?.Value;
-            if (!string.IsNullOrEmpty(claim))
-                TenantId = Guid.Parse(claim);
+            var tenantIdStr = httpContextAccessor.HttpContext?.Items["TenantId"]?.ToString();
+            if (!string.IsNullOrEmpty(tenantIdStr))
+                TenantId = Guid.Parse(tenantIdStr);
         }
     }
 }
