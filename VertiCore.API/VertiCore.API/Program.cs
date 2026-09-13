@@ -8,6 +8,7 @@ using VertiCore.Infrastructure.Data;
 using VertiCore.Infrastructure.Repositories;
 using VertiCore.Infrastructure.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,6 +35,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IInvoiceItemRepository, InvoiceItemRepository>();
 
 // Service registrations
 builder.Services.AddScoped<IAuthService, AuthService>();

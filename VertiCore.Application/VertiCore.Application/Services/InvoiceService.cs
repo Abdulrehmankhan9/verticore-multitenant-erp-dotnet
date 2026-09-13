@@ -1,4 +1,4 @@
-using VertiCore.Application.DTOs.Invoice;
+﻿using VertiCore.Application.DTOs.Invoice;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
 using VertiCore.Domain.Enums;
@@ -9,21 +9,27 @@ namespace VertiCore.Application.Services
     {
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IClientRepository _clientRepository;
+        private readonly IInvoiceItemRepository _invoiceItemRepository;
 
-        public InvoiceService(IInvoiceRepository invoiceRepository, IClientRepository clientRepository)
+        public InvoiceService(
+            IInvoiceRepository invoiceRepository,
+            IClientRepository clientRepository,
+            IInvoiceItemRepository invoiceItemRepository)
         {
             _invoiceRepository = invoiceRepository;
             _clientRepository = clientRepository;
+            _invoiceItemRepository = invoiceItemRepository;
         }
 
         public async Task<List<InvoiceDto>> GetAllAsync(Guid tenantId)
         {
-            var invoices = await _invoiceRepository.GetAllAsync();
-            var tenantInvoices = invoices.Where(i => i.TenantId == tenantId).ToList();
+            var tenantInvoices = await _invoiceRepository.GetAllAsync();
 
             foreach (var invoice in tenantInvoices)
             {
-                if (invoice.DueDate < DateTime.UtcNow && invoice.Status != InvoiceStatus.Paid && invoice.Status != InvoiceStatus.Overdue)
+                if (invoice.DueDate < DateTime.UtcNow &&
+                    invoice.Status != InvoiceStatus.Paid &&
+                    invoice.Status != InvoiceStatus.Overdue)
                 {
                     invoice.Status = InvoiceStatus.Overdue;
                     _invoiceRepository.Update(invoice);
@@ -53,24 +59,34 @@ namespace VertiCore.Application.Services
         public async Task<InvoiceDto> CreateAsync(CreateInvoiceRequest request, Guid tenantId)
         {
             var totalAmount = request.Items.Sum(i => i.Quantity * i.UnitPrice);
-
             var invoiceNumber = $"INV-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString()[..6].ToUpper()}";
 
             var invoice = new Invoice
             {
-                Id = Guid.NewGuid(),
                 TenantId = tenantId,
                 ClientId = request.ClientId,
                 InvoiceNumber = invoiceNumber,
                 Status = InvoiceStatus.Draft,
                 TotalAmount = totalAmount,
                 DueDate = request.DueDate,
-                Notes = request.Notes,
-                CreatedAt = DateTime.UtcNow
+                Notes = request.Notes
             };
 
             await _invoiceRepository.AddAsync(invoice);
             await _invoiceRepository.SaveChangesAsync();
+
+            // Items save karo ✅
+            var invoiceItems = request.Items.Select(i => new InvoiceItem
+            {
+                InvoiceId = invoice.Id,
+                Description = i.Description,
+                Quantity = i.Quantity,
+                UnitPrice = i.UnitPrice,
+                Total = i.Quantity * i.UnitPrice
+            }).ToList();
+
+            await _invoiceItemRepository.AddRangeAsync(invoiceItems);
+            await _invoiceItemRepository.SaveChangesAsync();
 
             var client = await _clientRepository.GetByIdAsync(request.ClientId);
 

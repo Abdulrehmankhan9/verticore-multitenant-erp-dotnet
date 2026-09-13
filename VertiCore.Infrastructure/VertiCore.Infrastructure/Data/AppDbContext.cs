@@ -24,20 +24,22 @@ namespace VertiCore.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var tenantId = _currentTenantService?.TenantId;
-
-            // Global Query Filters — Multi-tenancy
+            // Global Query Filters — har query pe evaluate hoga
             modelBuilder.Entity<Client>()
-                .HasQueryFilter(c => tenantId == null || c.TenantId == tenantId);
+                .HasQueryFilter(c => _currentTenantService!.TenantId == null
+                    || c.TenantId == _currentTenantService.TenantId);
 
             modelBuilder.Entity<Invoice>()
-                .HasQueryFilter(i => tenantId == null || i.TenantId == tenantId);
+                .HasQueryFilter(i => _currentTenantService!.TenantId == null
+                    || i.TenantId == _currentTenantService.TenantId);
 
             modelBuilder.Entity<AuditLog>()
-                .HasQueryFilter(a => tenantId == null || a.TenantId == tenantId);
+                .HasQueryFilter(a => _currentTenantService!.TenantId == null
+                    || a.TenantId == _currentTenantService.TenantId);
 
             modelBuilder.Entity<User>()
-                .HasQueryFilter(u => tenantId == null || u.TenantId == tenantId);
+                .HasQueryFilter(u => _currentTenantService!.TenantId == null
+                    || u.TenantId == _currentTenantService.TenantId);
 
             // Cascade fix
             modelBuilder.Entity<Invoice>()
