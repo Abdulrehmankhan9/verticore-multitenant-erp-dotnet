@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using VertiCore.Application.DTOs;
 using VertiCore.Application.DTOs.Auth;
 using VertiCore.Application.Interfaces;
 
@@ -19,14 +20,14 @@ namespace VertiCore.API.Controllers
         public async Task<IActionResult> Register(RegisterRequest request)
         {
             var result = await _authService.RegisterAsync(request);
-            return Ok(result);
+            return Ok(ApiResponse<AuthResponse>.Ok(result, "Registered successfully"));
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var result = await _authService.LoginAsync(request);
-            return Ok(result);
+            return Ok(ApiResponse<AuthResponse>.Ok(result, "Login successful"));
         }
     }
 }

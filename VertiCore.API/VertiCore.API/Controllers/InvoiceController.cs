@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VertiCore.Application.DTOs;
 using VertiCore.Application.DTOs.Invoice;
 using VertiCore.Application.Interfaces;
 
@@ -30,7 +31,7 @@ namespace VertiCore.API.Controllers
         {
             var tenantId = GetTenantId();
             var invoices = await _invoiceService.GetAllAsync(tenantId);
-            return Ok(invoices);
+            return Ok(ApiResponse<List<InvoiceDto>>.Ok(invoices));
         }
 
         [HttpPost]
@@ -38,7 +39,7 @@ namespace VertiCore.API.Controllers
         {
             var tenantId = GetTenantId();
             var invoice = await _invoiceService.CreateAsync(request, tenantId);
-            return Ok(invoice);
+            return Ok(ApiResponse<InvoiceDto>.Ok(invoice, "Invoice created successfully"));
         }
 
         [HttpGet("overdue")]
@@ -46,7 +47,7 @@ namespace VertiCore.API.Controllers
         {
             var tenantId = GetTenantId();
             var invoices = await _invoiceService.GetOverdueAsync(tenantId);
-            return Ok(invoices);
+            return Ok(ApiResponse<List<InvoiceDto>>.Ok(invoices));
         }
 
         [HttpGet("{id}/pdf")]

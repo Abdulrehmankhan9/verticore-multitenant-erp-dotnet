@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VertiCore.Application.DTOs;
+using VertiCore.Application.DTOs.AuditLog;
 using VertiCore.Application.Interfaces;
 
 namespace VertiCore.API.Controllers
@@ -21,9 +23,8 @@ namespace VertiCore.API.Controllers
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
             var tenantId = Guid.Parse(tenantIdClaim!);
-
             var logs = await _auditLogService.GetAllAsync(tenantId);
-            return Ok(logs);
+            return Ok(ApiResponse<List<AuditLogDto>>.Ok(logs));
         }
     }
 }

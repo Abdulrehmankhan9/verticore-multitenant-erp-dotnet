@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VertiCore.Application.DTOs;
 using VertiCore.Application.DTOs.Client;
 using VertiCore.Application.Interfaces;
 
@@ -36,7 +37,7 @@ namespace VertiCore.API.Controllers
         {
             var tenantId = GetTenantId();
             var clients = await _clientService.GetAllAsync(tenantId);
-            return Ok(clients);
+            return Ok(ApiResponse<List<ClientDto>>.Ok(clients));
         }
 
         [HttpGet("{id}")]
@@ -44,11 +45,9 @@ namespace VertiCore.API.Controllers
         {
             var tenantId = GetTenantId();
             var client = await _clientService.GetByIdAsync(id, tenantId);
-
             if (client == null)
-                return NotFound();
-
-            return Ok(client);
+                return NotFound(ApiResponse<ClientDto>.Fail("Client not found"));
+            return Ok(ApiResponse<ClientDto>.Ok(client));
         }
 
         [HttpPost]
@@ -57,10 +56,8 @@ namespace VertiCore.API.Controllers
             var tenantId = GetTenantId();
             var userId = GetUserId();
             var client = await _clientService.CreateAsync(request, tenantId);
-
             await _auditLogService.LogAsync(tenantId, userId, "Create", "Client", client.Id.ToString(), $"Created client: {client.FullName}");
-
-            return CreatedAtAction(nameof(GetById), new { id = client.Id }, client);
+            return Ok(ApiResponse<ClientDto>.Ok(client, "Client created successfully"));
         }
 
         [HttpPut("{id}")]
@@ -69,10 +66,8 @@ namespace VertiCore.API.Controllers
             var tenantId = GetTenantId();
             var userId = GetUserId();
             await _clientService.UpdateAsync(id, request, tenantId);
-
             await _auditLogService.LogAsync(tenantId, userId, "Update", "Client", id.ToString(), $"Updated client: {request.FullName}");
-
-            return NoContent();
+            return Ok(ApiResponse<string>.Ok("Updated", "Client updated successfully"));
         }
 
         [HttpDelete("{id}")]
@@ -81,10 +76,8 @@ namespace VertiCore.API.Controllers
             var tenantId = GetTenantId();
             var userId = GetUserId();
             await _clientService.DeleteAsync(id, tenantId);
-
             await _auditLogService.LogAsync(tenantId, userId, "Delete", "Client", id.ToString(), "Deleted client");
-
-            return NoContent();
+            return Ok(ApiResponse<string>.Ok("Deleted", "Client deleted successfully"));
         }
     }
 }
