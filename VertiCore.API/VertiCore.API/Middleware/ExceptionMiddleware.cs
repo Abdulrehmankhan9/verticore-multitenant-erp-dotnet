@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using VertiCore.Domain.Exceptions;
 
 namespace VertiCore.API.Middleware
 {
@@ -30,7 +31,10 @@ namespace VertiCore.API.Middleware
 
             var statusCode = exception switch
             {
-                KeyNotFoundException => HttpStatusCode.NotFound,
+                ClientNotFoundException => HttpStatusCode.NotFound,
+                InvoiceNotFoundException => HttpStatusCode.NotFound,
+                TenantNotFoundException => HttpStatusCode.NotFound,
+                InvalidCredentialsException => HttpStatusCode.Unauthorized,
                 UnauthorizedAccessException => HttpStatusCode.Unauthorized,
                 _ => HttpStatusCode.InternalServerError
             };

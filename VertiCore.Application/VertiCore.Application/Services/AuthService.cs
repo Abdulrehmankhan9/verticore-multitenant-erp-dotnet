@@ -3,6 +3,7 @@ using VertiCore.Application.DTOs.Auth;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
 using VertiCore.Domain.Enums;
+using VertiCore.Domain.Exceptions;
 
 namespace VertiCore.Application.Services
 {
@@ -69,7 +70,7 @@ namespace VertiCore.Application.Services
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                throw new UnauthorizedAccessException("Invalid email or password");
+                throw new InvalidCredentialsException();
             }
 
             var token = _jwtService.GenerateToken(user);

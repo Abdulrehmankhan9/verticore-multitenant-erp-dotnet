@@ -1,6 +1,7 @@
 using VertiCore.Application.DTOs.Client;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
+using VertiCore.Domain.Exceptions;
 
 namespace VertiCore.Application.Services
 {
@@ -83,7 +84,7 @@ namespace VertiCore.Application.Services
             var client = await _clientRepository.GetByIdAsync(id);
 
             if (client == null || client.TenantId != tenantId)
-                throw new KeyNotFoundException("Client not found");
+                throw new ClientNotFoundException(id);
 
             client.FullName = request.FullName;
             client.Email = request.Email;
