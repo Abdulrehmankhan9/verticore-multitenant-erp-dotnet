@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using VertiCore.Application.DTOs;
 using VertiCore.Application.DTOs.Invoice;
 using VertiCore.Application.Interfaces;
+using VertiCore.Domain.Enums;
+
 
 namespace VertiCore.API.Controllers
 {
@@ -55,6 +57,14 @@ namespace VertiCore.API.Controllers
         {
             var pdfBytes = _pdfService.GenerateInvoicePdf(id);
             return File(pdfBytes, "application/pdf", $"invoice_{id}.pdf");
+        }
+
+        [HttpPut("{id}/status")]
+        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] InvoiceStatus status)
+        {
+            var tenantId = GetTenantId();
+            await _invoiceService.UpdateStatusAsync(id, status, tenantId);
+            return Ok(ApiResponse<string>.Ok("Updated", "Invoice status updated successfully"));
         }
     }
 }

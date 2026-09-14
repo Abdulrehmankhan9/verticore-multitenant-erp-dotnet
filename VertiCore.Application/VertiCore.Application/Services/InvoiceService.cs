@@ -2,6 +2,7 @@
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Entities;
 using VertiCore.Domain.Enums;
+using VertiCore.Domain.Exceptions;
 
 namespace VertiCore.Application.Services
 {
@@ -75,7 +76,6 @@ namespace VertiCore.Application.Services
             await _invoiceRepository.AddAsync(invoice);
             await _invoiceRepository.SaveChangesAsync();
 
-            // Items save karo ✅
             var invoiceItems = request.Items.Select(i => new InvoiceItem
             {
                 InvoiceId = invoice.Id,
@@ -124,5 +124,17 @@ namespace VertiCore.Application.Services
 
             return result;
         }
+
+        public async Task UpdateStatusAsync(Guid invoiceId, InvoiceStatus status, Guid tenantId)
+        {
+            var invoice = await _invoiceRepository.GetByIdAsync(invoiceId);
+
+            if (invoice == null || invoice.TenantId != tenantId)
+                throw new InvoiceNotFoundException(invoiceId);
+
+            invoice.Status = status;
+            _invoiceRepository.Update(invoice);
+            await _invoiceRepository.SaveChangesAsync();
+        }
     }
-}
+}   
