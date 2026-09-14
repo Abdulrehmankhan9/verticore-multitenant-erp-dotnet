@@ -3,3 +3,4 @@ bin/
 obj/
 *.user
 Planning.txt
+appsettings.Development.json

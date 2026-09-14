@@ -21,6 +21,7 @@ namespace VertiCore.Infrastructure.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<UserInvitation> UserInvitations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,6 +33,10 @@ namespace VertiCore.Infrastructure.Data
             modelBuilder.Entity<Invoice>()
                 .HasQueryFilter(i => _currentTenantService!.TenantId == null
                     || i.TenantId == _currentTenantService.TenantId);
+
+            modelBuilder.Entity<InvoiceItem>()
+                .HasQueryFilter(ii => _currentTenantService!.TenantId == null
+                    || ii.Invoice.TenantId == _currentTenantService.TenantId);
 
             modelBuilder.Entity<AuditLog>()
                 .HasQueryFilter(a => _currentTenantService!.TenantId == null
@@ -65,6 +70,17 @@ namespace VertiCore.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.TotalAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<InvoiceItem>()
+                .Property(i => i.UnitPrice)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<InvoiceItem>()
+                .Property(i => i.Total)
+                .HasPrecision(18, 2);
 
             base.OnModelCreating(modelBuilder);
         }

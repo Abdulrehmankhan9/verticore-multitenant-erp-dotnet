@@ -12,26 +12,27 @@ namespace VertiCore.Application.Services
         private readonly IRepository<Tenant> _tenantRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IJwtService _jwtService;
+        private readonly IEmailService _emailService;
 
         public AuthService(
             IRepository<Tenant> tenantRepository,
             IRepository<User> userRepository,
-            IJwtService jwtService)
+            IJwtService jwtService,
+            IEmailService emailService)
         {
             _tenantRepository = tenantRepository;
             _userRepository = userRepository;
             _jwtService = jwtService;
+            _emailService = emailService;
         }
 
         public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
         {
             var tenant = new Tenant
             {
-                Id = Guid.NewGuid(),
                 Name = request.TenantName,
                 ContactEmail = request.Email,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                IsActive = true
             };
 
             await _tenantRepository.AddAsync(tenant);
@@ -39,18 +40,23 @@ namespace VertiCore.Application.Services
 
             var user = new User
             {
-                Id = Guid.NewGuid(),
                 TenantId = tenant.Id,
                 FullName = request.FullName,
                 Email = request.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Role = UserRole.TenantAdmin,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                IsActive = true
             };
 
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
+
+            // Email bhejo
+            await _emailService.SendWelcomeEmailAsync(
+                request.Email,
+                request.TenantName,
+                request.FullName
+            );
 
             var token = _jwtService.GenerateToken(user);
 
@@ -69,9 +75,7 @@ namespace VertiCore.Application.Services
             var user = users.FirstOrDefault(u => u.Email == request.Email);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            {
                 throw new InvalidCredentialsException();
-            }
 
             var token = _jwtService.GenerateToken(user);
 
