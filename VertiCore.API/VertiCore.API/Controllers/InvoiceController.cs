@@ -5,7 +5,6 @@ using VertiCore.Application.DTOs.Invoice;
 using VertiCore.Application.Interfaces;
 using VertiCore.Domain.Enums;
 
-
 namespace VertiCore.API.Controllers
 {
     [ApiController]
@@ -15,17 +14,28 @@ namespace VertiCore.API.Controllers
     {
         private readonly IInvoiceService _invoiceService;
         private readonly IPdfService _pdfService;
+        private readonly IAuditLogService _auditLogService;
 
-        public InvoiceController(IInvoiceService invoiceService, IPdfService pdfService)
+        public InvoiceController(
+            IInvoiceService invoiceService,
+            IPdfService pdfService,
+            IAuditLogService auditLogService)
         {
             _invoiceService = invoiceService;
             _pdfService = pdfService;
+            _auditLogService = auditLogService;
         }
 
         private Guid GetTenantId()
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
             return Guid.Parse(tenantIdClaim!);
+        }
+
+        private Guid GetUserId()
+        {
+            var userIdClaim = User.FindFirst("UserId")?.Value;
+            return Guid.Parse(userIdClaim!);
         }
 
         [HttpGet]
@@ -40,7 +50,12 @@ namespace VertiCore.API.Controllers
         public async Task<IActionResult> Create(CreateInvoiceRequest request)
         {
             var tenantId = GetTenantId();
+            var userId = GetUserId();
             var invoice = await _invoiceService.CreateAsync(request, tenantId);
+
+            await _auditLogService.LogAsync(tenantId, userId, "Create", "Invoice",
+                invoice.Id.ToString(), $"Created invoice: {invoice.InvoiceNumber} for {invoice.ClientName}");
+
             return Ok(ApiResponse<InvoiceDto>.Ok(invoice, "Invoice created successfully"));
         }
 
@@ -63,7 +78,12 @@ namespace VertiCore.API.Controllers
         public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] InvoiceStatus status)
         {
             var tenantId = GetTenantId();
+            var userId = GetUserId();
             await _invoiceService.UpdateStatusAsync(id, status, tenantId);
+
+            await _auditLogService.LogAsync(tenantId, userId, "UpdateStatus", "Invoice",
+                id.ToString(), $"Invoice status updated to: {status}");
+
             return Ok(ApiResponse<string>.Ok("Updated", "Invoice status updated successfully"));
         }
     }
