@@ -18,7 +18,7 @@ namespace VertiCore.API.Controllers
         }
 
         [HttpPost("invite")]
-        [Authorize]
+        [Authorize(Policy = "TenantAdminOnly")]
         public async Task<IActionResult> InviteUser(InviteUserRequest request)
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;

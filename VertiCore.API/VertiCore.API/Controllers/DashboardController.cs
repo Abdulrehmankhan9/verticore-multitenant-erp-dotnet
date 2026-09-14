@@ -8,7 +8,7 @@ namespace VertiCore.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Policy = "ManagerAndAbove")]
     public class DashboardController : ControllerBase
     {
         private readonly IDashboardService _dashboardService;

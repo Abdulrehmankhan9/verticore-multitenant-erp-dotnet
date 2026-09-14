@@ -8,7 +8,7 @@ namespace VertiCore.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Policy = "TenantAdminOnly")]
     public class AuditLogController : ControllerBase
     {
         private readonly IAuditLogService _auditLogService;

@@ -68,6 +68,19 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Authorization Policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("TenantAdminOnly", policy =>
+        policy.RequireRole("TenantAdmin"));
+
+    options.AddPolicy("ManagerAndAbove", policy =>
+        policy.RequireRole("TenantAdmin", "Manager"));
+
+    options.AddPolicy("StaffAndAbove", policy =>
+        policy.RequireRole("TenantAdmin", "Manager", "Staff"));
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
