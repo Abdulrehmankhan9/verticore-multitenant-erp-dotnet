@@ -1,6 +1,7 @@
 ﻿using BCrypt.Net;
 using VertiCore.Application.DTOs.User;
 using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Domain.Entities;
 using VertiCore.Domain.Exceptions;
 

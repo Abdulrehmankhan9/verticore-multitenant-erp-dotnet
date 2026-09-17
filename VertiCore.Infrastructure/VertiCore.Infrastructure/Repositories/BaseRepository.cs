@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Infrastructure.Data;
 
 namespace VertiCore.Infrastructure.Repositories

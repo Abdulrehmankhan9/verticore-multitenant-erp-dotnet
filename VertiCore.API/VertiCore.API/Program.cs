@@ -8,6 +8,7 @@ using VertiCore.Infrastructure.Data;
 using VertiCore.Infrastructure.Repositories;
 using VertiCore.Infrastructure.Services;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+using VertiCore.Application.Interfaces.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);

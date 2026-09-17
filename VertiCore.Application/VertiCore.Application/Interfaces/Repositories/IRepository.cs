@@ -1,4 +1,4 @@
-namespace VertiCore.Application.Interfaces
+namespace VertiCore.Application.Interfaces.Repositories
 {
     public interface IRepository<T> where T : class
     {

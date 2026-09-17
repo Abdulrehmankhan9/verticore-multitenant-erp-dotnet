@@ -1,6 +1,6 @@
 ﻿using VertiCore.Domain.Entities;
 
-namespace VertiCore.Application.Interfaces
+namespace VertiCore.Application.Interfaces.Repositories
 {
     public interface IInvoiceItemRepository
     {

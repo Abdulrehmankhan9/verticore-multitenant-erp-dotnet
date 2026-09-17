@@ -1,6 +1,6 @@
 ﻿using VertiCore.Domain.Entities;
-using VertiCore.Application.Interfaces;
 using VertiCore.Infrastructure.Data;
+using VertiCore.Application.Interfaces.Repositories;
 
 namespace VertiCore.Infrastructure.Repositories
 {
