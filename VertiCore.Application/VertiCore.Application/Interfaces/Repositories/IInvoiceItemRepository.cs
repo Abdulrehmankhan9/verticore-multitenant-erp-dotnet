@@ -1,4 +1,4 @@
-﻿using VertiCore.Domain.Entities;
+using VertiCore.Domain.Entities;
 
 namespace VertiCore.Application.Interfaces.Repositories
 {
@@ -8,3 +8,4 @@ namespace VertiCore.Application.Interfaces.Repositories
         Task SaveChangesAsync();
     }
 }
+

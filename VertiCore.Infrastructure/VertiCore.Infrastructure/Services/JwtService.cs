@@ -3,7 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Services;
+using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Domain.Entities;
 
 namespace VertiCore.Infrastructure.Services
@@ -42,3 +43,4 @@ namespace VertiCore.Infrastructure.Services
         }
     }
 }
+

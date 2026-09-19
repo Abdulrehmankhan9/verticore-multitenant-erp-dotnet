@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Services;
 
 namespace VertiCore.Application.Services
 {

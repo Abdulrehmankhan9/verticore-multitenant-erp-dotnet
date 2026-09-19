@@ -1,6 +1,6 @@
 using VertiCore.Application.DTOs.Auth;
 
-namespace VertiCore.Application.Interfaces
+namespace VertiCore.Application.Interfaces.Services
 {
     public interface IAuthService
     {
@@ -8,3 +8,4 @@ namespace VertiCore.Application.Interfaces
         Task<AuthResponse> LoginAsync(LoginRequest request);
     }
 }
+

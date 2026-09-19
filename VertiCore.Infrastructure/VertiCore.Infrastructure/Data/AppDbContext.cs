@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using VertiCore.Domain.Entities;
-using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Services;
+using VertiCore.Application.Interfaces.Repositories;
 
 namespace VertiCore.Infrastructure.Data
 {

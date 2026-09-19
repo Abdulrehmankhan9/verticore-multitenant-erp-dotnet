@@ -1,6 +1,6 @@
 using VertiCore.Application.DTOs.AuditLog;
 
-namespace VertiCore.Application.Interfaces
+namespace VertiCore.Application.Interfaces.Services
 {
     public interface IAuditLogService
     {
@@ -8,3 +8,4 @@ namespace VertiCore.Application.Interfaces
         Task<List<AuditLogDto>> GetAllAsync(Guid tenantId);
     }
 }
+

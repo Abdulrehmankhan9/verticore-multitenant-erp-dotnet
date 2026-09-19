@@ -1,6 +1,6 @@
-﻿using VertiCore.Application.DTOs.User;
+using VertiCore.Application.DTOs.User;
 
-namespace VertiCore.Application.Interfaces
+namespace VertiCore.Application.Interfaces.Services
 {
     public interface IUserService
     {

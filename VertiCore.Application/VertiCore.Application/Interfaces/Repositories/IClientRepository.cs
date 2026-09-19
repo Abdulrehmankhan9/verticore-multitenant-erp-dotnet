@@ -7,3 +7,5 @@ namespace VertiCore.Application.Interfaces.Repositories
         Task<List<Client>> SearchAsync(string keyword);
     }
 }
+
+

@@ -1,7 +1,7 @@
 using VertiCore.Application.DTOs.Invoice;
 using VertiCore.Domain.Enums;
 
-namespace VertiCore.Application.Interfaces
+namespace VertiCore.Application.Interfaces.Services
 {
     public interface IInvoiceService
     {

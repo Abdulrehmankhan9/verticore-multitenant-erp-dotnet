@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VertiCore.Application.DTOs;
 using VertiCore.Application.DTOs.Dashboard;
-using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Services;
+using VertiCore.Application.Interfaces.Repositories;
 
 namespace VertiCore.API.Controllers
 {

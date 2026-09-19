@@ -19,3 +19,4 @@ namespace VertiCore.Infrastructure.Repositories
         }
     }
 }
+

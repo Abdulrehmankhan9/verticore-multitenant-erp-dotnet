@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
-using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Services;
 
 namespace VertiCore.Infrastructure.Services
 {

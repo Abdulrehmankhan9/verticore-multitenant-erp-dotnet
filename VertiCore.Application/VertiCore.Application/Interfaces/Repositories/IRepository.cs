@@ -10,3 +10,5 @@ namespace VertiCore.Application.Interfaces.Repositories
         Task SaveChangesAsync();
     }
 }
+
+

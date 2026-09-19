@@ -1,6 +1,6 @@
 using VertiCore.Application.DTOs.Client;
 
-namespace VertiCore.Application.Interfaces
+namespace VertiCore.Application.Interfaces.Services
 {
     public interface IClientService
     {
@@ -11,3 +11,4 @@ namespace VertiCore.Application.Interfaces
         Task DeleteAsync(Guid id, Guid tenantId);
     }
 }
+

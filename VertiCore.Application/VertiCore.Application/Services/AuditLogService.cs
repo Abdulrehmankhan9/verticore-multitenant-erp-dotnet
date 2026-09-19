@@ -1,5 +1,5 @@
 using VertiCore.Application.DTOs.AuditLog;
-using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Services;
 using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Domain.Entities;
 

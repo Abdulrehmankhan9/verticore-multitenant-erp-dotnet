@@ -1,7 +1,8 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using VertiCore.Application.Interfaces;
+using VertiCore.Application.Interfaces.Services;
+using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Infrastructure.Data;
 
 namespace VertiCore.Infrastructure.Services
@@ -51,3 +52,4 @@ namespace VertiCore.Infrastructure.Services
         }
     }
 }
+
