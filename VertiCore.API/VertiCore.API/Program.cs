@@ -1,20 +1,23 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using System.Text;
-using VertiCore.Application.Interfaces.Services;
 using VertiCore.Application.Interfaces.Repositories;
+using VertiCore.Application.Interfaces.Services;
+using VertiCore.Application.Mappings;
 using VertiCore.Application.Services;
 using VertiCore.Infrastructure.Data;
 using VertiCore.Infrastructure.Repositories;
 using VertiCore.Infrastructure.Services;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
-
+using VertiCore.Application.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(typeof(ClientMappingProfile));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
      options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
