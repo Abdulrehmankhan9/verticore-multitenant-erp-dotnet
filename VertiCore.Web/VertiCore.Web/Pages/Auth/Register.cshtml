@@ -1,0 +1,496 @@
+﻿@page
+@model VertiCore.Web.Pages.Auth.RegisterModel
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #f0f2f5;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .page-wrap {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 16px;
+    }
+
+    .auth-shell {
+        width: 100%;
+        max-width: 440px;
+    }
+
+    /* Brand */
+    .brand {
+        text-align: center;
+        margin-bottom: 28px;
+    }
+
+    .brand-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        margin-bottom: 8px;
+    }
+
+    .brand-icon {
+        width: 36px;
+        height: 36px;
+        background: #1a1a1a;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .brand-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+        }
+
+    .brand-wordmark {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a1a;
+        letter-spacing: -0.4px;
+    }
+
+    .brand-sub {
+        font-size: 13px;
+        color: #8a8f98;
+        margin: 0;
+    }
+
+    /* Card */
+    .auth-card {
+        background: #fff;
+        border-radius: 18px;
+        border: 1px solid #e4e7ec;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.02);
+        padding: 32px;
+    }
+
+    .card-head {
+        margin-bottom: 24px;
+    }
+
+        .card-head h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111;
+            margin: 0 0 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .card-head p {
+            font-size: 13px;
+            color: #8a8f98;
+            margin: 0;
+        }
+
+    /* Alerts */
+    .alert-box {
+        display: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 18px;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+        .alert-box.visible {
+            display: flex;
+        }
+
+    .alert-error {
+        background: #fff5f5;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+    }
+
+    .alert-success {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #15803d;
+    }
+
+    .alert-icon {
+        flex-shrink: 0;
+        margin-top: 1px;
+        font-size: 15px;
+        line-height: 1;
+    }
+
+    /* Form */
+    .field {
+        margin-bottom: 16px;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+        letter-spacing: 0.01em;
+    }
+
+    .field-input {
+        width: 100%;
+        height: 42px;
+        padding: 0 14px;
+        font-size: 14px;
+        font-family: inherit;
+        color: #111;
+        background: #fff;
+        border: 1.5px solid #e4e7ec;
+        border-radius: 10px;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        appearance: none;
+    }
+
+        .field-input::placeholder {
+            color: #c0c5ce;
+        }
+
+        .field-input:focus {
+            border-color: #1a1a1a;
+            box-shadow: 0 0 0 3px rgba(26,26,26,0.07);
+        }
+
+        .field-input.error {
+            border-color: #f87171;
+            box-shadow: 0 0 0 3px rgba(248,113,113,0.1);
+        }
+
+    /* Password field */
+    .pwd-wrap {
+        position: relative;
+    }
+
+        .pwd-wrap .field-input {
+            padding-right: 52px;
+        }
+
+    .pwd-eye {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 42px;
+        width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #9ca3af;
+        padding: 0;
+        border-radius: 0 10px 10px 0;
+        transition: color 0.15s;
+    }
+
+        .pwd-eye:hover {
+            color: #374151;
+        }
+
+        .pwd-eye svg {
+            width: 18px;
+            height: 18px;
+            pointer-events: none;
+        }
+
+    /* Submit */
+    .submit-btn {
+        width: 100%;
+        height: 44px;
+        background: #1a1a1a;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.15s, opacity 0.15s;
+        letter-spacing: 0.01em;
+    }
+
+        .submit-btn:hover {
+            background: #2d2d2d;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+    .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        flex-shrink: 0;
+    }
+
+    @@keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Divider */
+    .or-line {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 20px 0;
+        color: #d1d5db;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+        .or-line::before,
+        .or-line::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #f0f0f0;
+        }
+
+    /* Footer link */
+    .signin-line {
+        text-align: center;
+        font-size: 13px;
+        color: #8a8f98;
+        margin: 0;
+    }
+
+        .signin-line a {
+            color: #1a1a1a;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+            .signin-line a:hover {
+                text-decoration: underline;
+            }
+
+    /* Copyright */
+    .copy {
+        text-align: center;
+        font-size: 12px;
+        color: #c0c5ce;
+        margin-top: 20px;
+    }
+
+    /* Name row (side by side on wider screens) */
+    @@media (min-width: 400px) {
+        .name-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+            .name-row .field {
+                margin-bottom: 0;
+            }
+    }
+</style>
+
+<div class="page-wrap">
+    <div class="auth-shell">
+
+        <!-- Brand -->
+        <div class="brand">
+            <a class="brand-logo" href="/">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L20 8.5v7L12 19.82 4 15.5v-7L12 4.18z" />
+                    </svg>
+                </div>
+                <span class="brand-wordmark">VertiCore</span>
+            </a>
+            <p class="brand-sub">Multi-tenant business management</p>
+        </div>
+
+        <!-- Card -->
+        <div class="auth-card">
+            <div class="card-head">
+                <h1>Create your workspace</h1>
+                <p>Set up your business account in seconds</p>
+            </div>
+
+            <!-- Alerts -->
+            <div id="errorAlert" class="alert-box alert-error" role="alert">
+                <span class="alert-icon">✕</span>
+                <span id="errorMsg"></span>
+            </div>
+            <div id="successAlert" class="alert-box alert-success" role="alert">
+                <span class="alert-icon">✓</span>
+                <span id="successMsg"></span>
+            </div>
+
+            <form id="registerForm" autocomplete="off" novalidate>
+
+                <div class="field">
+                    <label class="field-label" for="tenantName">Business name</label>
+                    <input class="field-input" type="text" id="tenantName"
+                           placeholder="Acme Corporation" autocomplete="off" required />
+                </div>
+
+                <div class="field" style="margin-bottom:16px;">
+                    <label class="field-label" for="fullName">Your full name</label>
+                    <input class="field-input" type="text" id="fullName"
+                           placeholder="John Smith" autocomplete="off" required />
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="email">Work email</label>
+                    <input class="field-input" type="email" id="email"
+                           placeholder="john@acmecorp.com" autocomplete="new-email" required />
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="password">Password</label>
+                    <div class="pwd-wrap">
+                        <input class="field-input" type="password" id="password"
+                               placeholder="Minimum 8 characters" autocomplete="new-password" required />
+                        <button class="pwd-eye" type="button" id="togglePassword" aria-label="Show password">
+                            <!-- Eye icon -->
+                            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            <svg id="eyeOffIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                <line x1="1" y1="1" x2="23" y2="23" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="registerBtn">
+                    Create account
+                </button>
+
+            </form>
+
+            <div class="or-line">or</div>
+
+            <p class="signin-line">
+                Already have an account?
+                <a href="/Auth/Login">Sign in</a>
+            </p>
+        </div>
+
+        <p class="copy">© 2026 VertiCore · All rights reserved</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Password toggle
+        const toggleBtn = document.getElementById('togglePassword');
+        const pwdInput  = document.getElementById('password');
+        const eyeIcon    = document.getElementById('eyeIcon');
+        const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+        toggleBtn.addEventListener('click', function () {
+            const show = pwdInput.type === 'password';
+            pwdInput.type       = show ? 'text' : 'password';
+            eyeIcon.style.display    = show ? 'none' : '';
+            eyeOffIcon.style.display = show ? '' : 'none';
+            toggleBtn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+        });
+
+        // Alert helpers
+        function showError(msg) {
+            const el = document.getElementById('errorAlert');
+            document.getElementById('errorMsg').textContent = msg;
+            el.classList.add('visible');
+            document.getElementById('successAlert').classList.remove('visible');
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('successAlert');
+            document.getElementById('successMsg').textContent = msg;
+            el.classList.add('visible');
+            document.getElementById('errorAlert').classList.remove('visible');
+        }
+
+        function clearAlerts() {
+            document.getElementById('errorAlert').classList.remove('visible');
+            document.getElementById('successAlert').classList.remove('visible');
+        }
+
+        // Submit — logic unchanged
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            clearAlerts();
+
+            const btn = document.getElementById('registerBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>Creating account…';
+
+            const payload = {
+                tenantName: document.getElementById('tenantName').value.trim(),
+                fullName:   document.getElementById('fullName').value.trim(),
+                email:      document.getElementById('email').value.trim(),
+                password:   document.getElementById('password').value
+            };
+
+            try {
+                const response = await fetch('https://localhost:7153/api/Auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Registration failed. Please try again.');
+                }
+
+                localStorage.setItem('token',    data.data.token);
+                localStorage.setItem('userName', data.data.fullName);
+
+                showSuccess('Account created! Redirecting…');
+
+                setTimeout(() => { window.location.href = '/Dashboard/Index'; }, 1500);
+
+            } catch (error) {
+                showError(error.message);
+                btn.disabled = false;
+                btn.innerHTML = 'Create account';
+            }
+        });
+    </script>
+}
