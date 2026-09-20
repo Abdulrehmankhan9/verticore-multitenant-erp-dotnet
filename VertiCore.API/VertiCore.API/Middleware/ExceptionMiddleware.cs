@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using VertiCore.Application.Exceptions;
 using VertiCore.Domain.Exceptions;
 
 namespace VertiCore.API.Middleware
@@ -31,6 +32,7 @@ namespace VertiCore.API.Middleware
 
             var statusCode = exception switch
             {
+                ValidationException => HttpStatusCode.BadRequest,
                 ClientNotFoundException => HttpStatusCode.NotFound,
                 InvoiceNotFoundException => HttpStatusCode.NotFound,
                 TenantNotFoundException => HttpStatusCode.NotFound,
@@ -41,11 +43,25 @@ namespace VertiCore.API.Middleware
 
             context.Response.StatusCode = (int)statusCode;
 
-            var response = new
+            object response;
+
+            if (exception is ValidationException validationEx)
             {
-                success = false,
-                message = exception.Message
-            };
+                response = new
+                {
+                    success = false,
+                    message = exception.Message,
+                    errors = validationEx.Errors
+                };
+            }
+            else
+            {
+                response = new
+                {
+                    success = false,
+                    message = exception.Message
+                };
+            }
 
             return context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
