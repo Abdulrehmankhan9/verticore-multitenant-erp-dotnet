@@ -3,7 +3,6 @@ using VertiCore.Application.DTOs.User;
 using VertiCore.Application.Interfaces.Services;
 using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Domain.Entities;
-using VertiCore.Domain.Exceptions;
 
 namespace VertiCore.Application.Services
 {
@@ -82,6 +81,21 @@ namespace VertiCore.Application.Services
 
             await _userRepository.SaveChangesAsync();
             await _invitationRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<UserDto>> GetUsersAsync(Guid tenantId)
+        {
+            var users = await _userRepository.GetAllAsync();
+            return users
+                .Where(u => u.TenantId == tenantId)
+                .Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    Role = (int)u.Role,
+                    IsActive = u.IsActive
+                }).ToList();
         }
     }
 }

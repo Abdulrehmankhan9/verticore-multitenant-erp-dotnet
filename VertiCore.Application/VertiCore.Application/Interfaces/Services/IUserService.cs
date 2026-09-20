@@ -6,5 +6,6 @@ namespace VertiCore.Application.Interfaces.Services
     {
         Task InviteUserAsync(InviteUserRequest request, Guid tenantId);
         Task SetPasswordAsync(SetPasswordRequest request);
+        Task<List<UserDto>> GetUsersAsync(Guid tenantId);
     }
 }

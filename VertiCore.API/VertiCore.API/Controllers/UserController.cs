@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using VertiCore.Application.DTOs;
 using VertiCore.Application.DTOs.User;
 using VertiCore.Application.Interfaces.Services;
-using VertiCore.Application.Interfaces.Repositories;
 
 namespace VertiCore.API.Controllers
 {
@@ -16,6 +15,17 @@ namespace VertiCore.API.Controllers
         public UserController(IUserService userService)
         {
             _userService = userService;
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "TenantAdminOnly")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var tenantIdClaim = User.FindFirst("TenantId")?.Value;
+            var tenantId = Guid.Parse(tenantIdClaim!);
+
+            var users = await _userService.GetUsersAsync(tenantId);
+            return Ok(ApiResponse<List<UserDto>>.Ok(users, "Users fetched"));
         }
 
         [HttpPost("invite")]

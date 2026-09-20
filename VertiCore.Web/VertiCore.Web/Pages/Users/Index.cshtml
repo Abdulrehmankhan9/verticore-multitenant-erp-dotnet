@@ -1,0 +1,747 @@
+﻿@page
+@model VertiCore.Web.Pages.Users.IndexModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Team Members";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+        background: #f0f2f5;
+    }
+
+    .page-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    /* Header */
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .page-header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #111;
+        margin: 0;
+        letter-spacing: -0.3px;
+    }
+
+    .page-header p {
+        font-size: 13px;
+        color: #8a8f98;
+        margin: 2px 0 0;
+    }
+
+    .invite-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        height: 40px;
+        padding: 0 18px;
+        background: #1a1a1a;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.15s;
+        white-space: nowrap;
+    }
+
+    .invite-btn:hover { background: #2d2d2d; color: #fff; }
+
+    .invite-btn svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+    }
+
+    /* Toast */
+    .toast-wrap {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        pointer-events: none;
+    }
+
+    .toast {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+        min-width: 260px;
+        max-width: 340px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        opacity: 0;
+        transform: translateX(20px);
+        transition: opacity 0.25s, transform 0.25s;
+        pointer-events: auto;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(0); }
+
+    .toast-success {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #15803d;
+    }
+
+    .toast-error {
+        background: #fff5f5;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+    }
+
+    .toast-icon { flex-shrink: 0; font-size: 15px; line-height: 1.4; }
+
+    /* Card */
+    .card {
+        background: #fff;
+        border: 1px solid #e4e7ec;
+        border-radius: 16px;
+        box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #8a8f98;
+    }
+
+    .empty-state-icon {
+        font-size: 38px;
+        margin-bottom: 12px;
+    }
+
+    .empty-state h3 {
+        font-size: 15px;
+        font-weight: 600;
+        color: #374151;
+        margin: 0 0 6px;
+    }
+
+    .empty-state p {
+        font-size: 13px;
+        margin: 0 0 20px;
+    }
+
+    /* Table */
+    .users-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .users-table thead tr {
+        border-bottom: 1px solid #f1f3f5;
+    }
+
+    .users-table th {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #8a8f98;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 12px 20px;
+        text-align: left;
+    }
+
+    .users-table td {
+        padding: 14px 20px;
+        font-size: 13.5px;
+        color: #374151;
+        border-bottom: 1px solid #f8f9fa;
+        vertical-align: middle;
+    }
+
+    .users-table tbody tr:last-child td { border-bottom: none; }
+
+    .users-table tbody tr:hover td { background: #fafafa; }
+
+    /* Avatar */
+    .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #1a1a1a;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        letter-spacing: 0.02em;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: #111;
+        font-size: 13.5px;
+    }
+
+    .user-email {
+        font-size: 12px;
+        color: #8a8f98;
+        margin-top: 1px;
+    }
+
+    /* Role badge */
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        height: 22px;
+        padding: 0 9px;
+        border-radius: 6px;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+    }
+
+    .role-tenantadmin { background: #ede9fe; color: #6d28d9; }
+    .role-manager     { background: #e0f2fe; color: #0369a1; }
+    .role-staff       { background: #f0fdf4; color: #15803d; }
+    .role-superadmin  { background: #fef9c3; color: #854d0e; }
+
+    /* Loading skeleton */
+    .skeleton-row td { padding: 14px 20px; }
+
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.3s infinite;
+        border-radius: 6px;
+        height: 14px;
+    }
+
+    @@keyframes shimmer {
+        0%   { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .skeleton-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.3s infinite;
+        flex-shrink: 0;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+        background: #fff;
+        border-radius: 18px;
+        border: 1px solid #e4e7ec;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.14);
+        width: 100%;
+        max-width: 420px;
+        padding: 28px;
+        position: relative;
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .modal-icon {
+        width: 42px;
+        height: 42px;
+        background: #f1f3f5;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .modal-header h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #111;
+        margin: 0 0 3px;
+        letter-spacing: -0.2px;
+    }
+
+    .modal-header p {
+        font-size: 12.5px;
+        color: #8a8f98;
+        margin: 0;
+    }
+
+    .modal-close {
+        width: 30px;
+        height: 30px;
+        border: none;
+        background: #f1f3f5;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        flex-shrink: 0;
+        transition: background 0.15s;
+    }
+
+    .modal-close:hover { background: #e4e7ec; }
+
+    .modal-close svg { width: 14px; height: 14px; }
+
+    /* Modal alert */
+    .modal-alert {
+        display: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 16px;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .modal-alert.visible { display: flex; }
+    .modal-alert-error { background: #fff5f5; border: 1px solid #fecaca; color: #b91c1c; }
+
+    /* Form fields */
+    .field { margin-bottom: 14px; }
+
+    .field-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+        letter-spacing: 0.01em;
+    }
+
+    .field-input, .field-select {
+        width: 100%;
+        height: 42px;
+        padding: 0 14px;
+        font-size: 14px;
+        font-family: inherit;
+        color: #111;
+        background: #fff;
+        border: 1.5px solid #e4e7ec;
+        border-radius: 10px;
+        outline: none;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        appearance: none;
+    }
+
+    .field-input::placeholder { color: #c0c5ce; }
+
+    .field-input:focus, .field-select:focus {
+        border-color: #1a1a1a;
+        box-shadow: 0 0 0 3px rgba(26,26,26,0.07);
+    }
+
+    .select-wrap { position: relative; }
+
+    .select-wrap::after {
+        content: '';
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 5px solid #6b7280;
+        pointer-events: none;
+    }
+
+    .modal-footer {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-cancel {
+        flex: 1;
+        height: 42px;
+        background: #f1f3f5;
+        color: #374151;
+        border: none;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+
+    .btn-cancel:hover { background: #e4e7ec; }
+
+    .btn-invite {
+        flex: 2;
+        height: 42px;
+        background: #1a1a1a;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 13.5px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.15s, opacity 0.15s;
+    }
+
+    .btn-invite:hover { background: #2d2d2d; }
+    .btn-invite:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .spinner {
+        width: 15px;
+        height: 15px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        flex-shrink: 0;
+    }
+
+    @@keyframes spin { to { transform: rotate(360deg); } }
+
+    @@media (max-width: 600px) {
+        .page-header h1 { font-size: 18px; }
+        .users-table th, .users-table td { padding: 12px 14px; }
+    }
+</style>
+
+<!-- Toast container -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Invite Modal -->
+<div class="modal-backdrop" id="inviteModal">
+    <div class="modal">
+        <div class="modal-icon">👤</div>
+        <div class="modal-header">
+            <div>
+                <h2>Invite team member</h2>
+                <p>They'll receive an email to set their password</p>
+            </div>
+            <button class="modal-close" onclick="closeModal()" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="modal-alert modal-alert-error" id="inviteError">
+            <span>✕</span>
+            <span id="inviteErrorMsg"></span>
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="inviteFullName">Full name</label>
+            <input class="field-input" type="text" id="inviteFullName" placeholder="e.g. Ayesha Khan" />
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="inviteEmail">Email address</label>
+            <input class="field-input" type="email" id="inviteEmail" placeholder="ayesha@company.com" />
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="inviteRole">Role</label>
+            <div class="select-wrap">
+                <select class="field-select" id="inviteRole">
+                    <option value="2">Manager</option>
+                    <option value="3">Staff</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-invite" id="inviteSubmitBtn" onclick="submitInvite()">
+                Send invite
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Page -->
+<div class="page-container">
+    <div class="page-header">
+        <div>
+            <h1>Team members</h1>
+            <p>Manage who has access to your workspace</p>
+        </div>
+        <button class="invite-btn" onclick="openModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Invite member
+        </button>
+    </div>
+
+    <div class="card">
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <!-- Loading skeletons -->
+                <tr class="skeleton-row">
+                    <td>
+                        <div class="user-cell">
+                            <div class="skeleton-avatar"></div>
+                            <div>
+                                <div class="skeleton" style="width:130px;margin-bottom:6px;"></div>
+                                <div class="skeleton" style="width:170px;height:11px;"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><div class="skeleton" style="width:70px;"></div></td>
+                </tr>
+                <tr class="skeleton-row">
+                    <td>
+                        <div class="user-cell">
+                            <div class="skeleton-avatar"></div>
+                            <div>
+                                <div class="skeleton" style="width:110px;margin-bottom:6px;"></div>
+                                <div class="skeleton" style="width:150px;height:11px;"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td><div class="skeleton" style="width:55px;"></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const API_BASE = 'https://localhost:7153';
+
+    function getToken() {
+        const t = localStorage.getItem('token');
+        if (!t) { window.location.href = '/Auth/Login'; return null; }
+        return t;
+    }
+
+    // --- Role helpers ---
+    const roleMap = {
+        0: { label: 'Super Admin', cls: 'role-superadmin' },
+        1: { label: 'Admin',       cls: 'role-tenantadmin' },
+        2: { label: 'Manager',     cls: 'role-manager' },
+        3: { label: 'Staff',       cls: 'role-staff' }
+    };
+
+    function roleBadge(role) {
+        const r = roleMap[role] || { label: 'Unknown', cls: 'role-staff' };
+        return `<span class="role-badge ${r.cls}">${r.label}</span>`;
+    }
+
+    function initials(name) {
+        if (!name) return '?';
+        const parts = name.trim().split(' ');
+        return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+    }
+
+    // --- Load users ---
+    async function loadUsers() {
+        const token = getToken();
+        if (!token) return;
+
+        try {
+            const res = await fetch(`${API_BASE}/api/User`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            const data = await res.json();
+
+            const tbody = document.getElementById('usersTableBody');
+
+            if (!data.success || !data.data || data.data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="2">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">👥</div>
+                                <h3>No team members yet</h3>
+                                <p>Invite someone to get started</p>
+                            </div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.data.map(u => `
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <div class="avatar">${initials(u.fullName)}</div>
+                            <div>S
+                                <div class="user-name">${u.fullName}</div>
+                                <div class="user-email">${u.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${roleBadge(u.role)}</td>
+                </tr>
+            `).join('');
+
+        } catch (err) {
+            document.getElementById('usersTableBody').innerHTML = `
+                <tr><td colspan="2">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⚠️</div>
+                        <h3>Could not load members</h3>
+                        <p>Check your connection and try again</p>
+                    </div>
+                </td></tr>`;
+        }
+    }
+
+    // --- Modal ---
+    function openModal() {
+        document.getElementById('inviteModal').classList.add('open');
+        document.getElementById('inviteFullName').focus();
+    }
+
+    function closeModal() {
+        document.getElementById('inviteModal').classList.remove('open');
+        document.getElementById('inviteFullName').value = '';
+        document.getElementById('inviteEmail').value = '';
+        document.getElementById('inviteRole').value = '2';
+        document.getElementById('inviteError').classList.remove('visible');
+        const btn = document.getElementById('inviteSubmitBtn');
+        btn.disabled = false;
+        btn.innerHTML = 'Send invite';
+    }
+
+    // Close on backdrop click
+    document.getElementById('inviteModal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // --- Invite submit ---
+    async function submitInvite() {
+        const token = getToken();
+        if (!token) return;
+
+        const fullName = document.getElementById('inviteFullName').value.trim();
+        const email    = document.getElementById('inviteEmail').value.trim();
+        const role     = parseInt(document.getElementById('inviteRole').value);
+        const errEl    = document.getElementById('inviteError');
+
+        errEl.classList.remove('visible');
+
+        if (!fullName) {
+            document.getElementById('inviteErrorMsg').textContent = 'Full name is required.';
+            errEl.classList.add('visible'); return;
+        }
+        if (!email || !email.includes('@@')) {
+            document.getElementById('inviteErrorMsg').textContent = 'Enter a valid email address.';
+            errEl.classList.add('visible'); return;
+        }
+
+        const btn = document.getElementById('inviteSubmitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner"></div>Sending…';
+
+        try {
+            const res = await fetch(`${API_BASE}/api/User/invite`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ fullName, email, role })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                throw new Error(data.message || 'Invite failed. Try again.');
+            }
+
+            closeModal();
+            showToast('Invite sent to ' + email, 'success');
+            setTimeout(loadUsers, 800);
+
+        } catch (err) {
+            document.getElementById('inviteErrorMsg').textContent = err.message;
+            errEl.classList.add('visible');
+            btn.disabled = false;
+            btn.innerHTML = 'Send invite';
+        }
+    }
+
+    // --- Toast ---
+    function showToast(msg, type = 'success') {
+        const wrap = document.getElementById('toastWrap');
+        const el = document.createElement('div');
+        el.className = `toast toast-${type}`;
+        el.innerHTML = `<span class="toast-icon">${type === 'success' ? '✓' : '✕'}</span><span>${msg}</span>`;
+        wrap.appendChild(el);
+        requestAnimationFrame(() => el.classList.add('show'));
+        setTimeout(() => {
+            el.classList.remove('show');
+            setTimeout(() => el.remove(), 300);
+        }, 3500);
+    }
+
+    // Init
+    loadUsers();
+</script>
+}
