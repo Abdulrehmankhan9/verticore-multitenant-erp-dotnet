@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "OuiNrfzE8Rk=",
+  "dgSpecHash": "I5w1mLVtU0E=",
   "success": true,
   "projectFilePath": "C:\\Users\\T15 GEN 1\\source\\repos\\VertiCore\\VertiCore.Infrastructure\\VertiCore.Infrastructure\\VertiCore.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\T15 GEN 1\\.nuget\\packages\\automapper\\16.2.0\\automapper.16.2.0.nupkg.sha512",
-    "C:\\Users\\T15 GEN 1\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\T15 GEN 1\\.nuget\\packages\\bcrypt.net-next\\4.2.0\\bcrypt.net-next.4.2.0.nupkg.sha512",
     "C:\\Users\\T15 GEN 1\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
     "C:\\Users\\T15 GEN 1\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
@@ -60,18 +59,5 @@
     "C:\\Users\\T15 GEN 1\\.nuget\\packages\\system.text.encoding.codepages\\6.0.0\\system.text.encoding.codepages.6.0.0.nupkg.sha512",
     "C:\\Users\\T15 GEN 1\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1608",
-      "level": "Warning",
-      "message": "Detected package version outside of dependency constraint: AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1 requires AutoMapper (= 12.0.1) but version AutoMapper 16.2.0 was resolved.",
-      "projectPath": "C:\\Users\\T15 GEN 1\\source\\repos\\VertiCore\\VertiCore.Infrastructure\\VertiCore.Infrastructure\\VertiCore.Infrastructure.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\T15 GEN 1\\source\\repos\\VertiCore\\VertiCore.Infrastructure\\VertiCore.Infrastructure\\VertiCore.Infrastructure.csproj",
-      "libraryId": "AutoMapper",
-      "targetGraphs": [
-        "net8.0"
-      ]
-    }
-  ]
+  "logs": []
 }

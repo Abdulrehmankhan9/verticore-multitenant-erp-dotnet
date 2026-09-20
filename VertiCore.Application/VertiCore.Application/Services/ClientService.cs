@@ -1,6 +1,7 @@
+using AutoMapper;
 using VertiCore.Application.DTOs.Client;
-using VertiCore.Application.Interfaces.Services;
 using VertiCore.Application.Interfaces.Repositories;
+using VertiCore.Application.Interfaces.Services;
 using VertiCore.Domain.Entities;
 using VertiCore.Domain.Exceptions;
 
@@ -9,75 +10,39 @@ namespace VertiCore.Application.Services
     public class ClientService : IClientService
     {
         private readonly IClientRepository _clientRepository;
+        private readonly IMapper _mapper;
 
-        public ClientService(IClientRepository clientRepository)
+        public ClientService(IClientRepository clientRepository, IMapper mapper)
         {
             _clientRepository = clientRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<ClientDto>> GetAllAsync(Guid tenantId)
         {
             var clients = await _clientRepository.GetAllAsync();
             var tenantClients = clients.Where(c => c.TenantId == tenantId).ToList();
-
-            return tenantClients.Select(c => new ClientDto
-            {
-                Id = c.Id,
-                FullName = c.FullName,
-                Email = c.Email,
-                Phone = c.Phone,
-                Address = c.Address,
-                IsActive = c.IsActive,
-                CreatedAt = c.CreatedAt
-            }).ToList();
+            return _mapper.Map<List<ClientDto>>(tenantClients);
         }
 
         public async Task<ClientDto?> GetByIdAsync(Guid id, Guid tenantId)
         {
             var client = await _clientRepository.GetByIdAsync(id);
-
             if (client == null || client.TenantId != tenantId)
                 return null;
-
-            return new ClientDto
-            {
-                Id = client.Id,
-                FullName = client.FullName,
-                Email = client.Email,
-                Phone = client.Phone,
-                Address = client.Address,
-                IsActive = client.IsActive,
-                CreatedAt = client.CreatedAt
-            };
+            return _mapper.Map<ClientDto>(client);
         }
 
         public async Task<ClientDto> CreateAsync(CreateClientRequest request, Guid tenantId)
         {
-            var client = new Client
-            {
-                Id = Guid.NewGuid(),
-                TenantId = tenantId,
-                FullName = request.FullName,
-                Email = request.Email,
-                Phone = request.Phone,
-                Address = request.Address,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow
-            };
+            var client = _mapper.Map<Client>(request);
+            client.TenantId = tenantId;
+            client.IsActive = true;
 
             await _clientRepository.AddAsync(client);
             await _clientRepository.SaveChangesAsync();
 
-            return new ClientDto
-            {
-                Id = client.Id,
-                FullName = client.FullName,
-                Email = client.Email,
-                Phone = client.Phone,
-                Address = client.Address,
-                IsActive = client.IsActive,
-                CreatedAt = client.CreatedAt
-            };
+            return _mapper.Map<ClientDto>(client);
         }
 
         public async Task UpdateAsync(Guid id, UpdateClientRequest request, Guid tenantId)
@@ -87,11 +52,7 @@ namespace VertiCore.Application.Services
             if (client == null || client.TenantId != tenantId)
                 throw new ClientNotFoundException(id);
 
-            client.FullName = request.FullName;
-            client.Email = request.Email;
-            client.Phone = request.Phone;
-            client.Address = request.Address;
-            client.IsActive = request.IsActive;
+            _mapper.Map(request, client);
 
             _clientRepository.Update(client);
             await _clientRepository.SaveChangesAsync();
@@ -102,7 +63,7 @@ namespace VertiCore.Application.Services
             var client = await _clientRepository.GetByIdAsync(id);
 
             if (client == null || client.TenantId != tenantId)
-                throw new KeyNotFoundException("Client not found");
+                throw new ClientNotFoundException(id);
 
             _clientRepository.Delete(client);
             await _clientRepository.SaveChangesAsync();

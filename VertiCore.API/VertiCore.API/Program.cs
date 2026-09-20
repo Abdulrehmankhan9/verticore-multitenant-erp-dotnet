@@ -1,26 +1,35 @@
+using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 using System.Text;
 using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Application.Interfaces.Services;
 using VertiCore.Application.Mappings;
 using VertiCore.Application.Services;
+using VertiCore.Application.Validators.Auth;
 using VertiCore.Infrastructure.Data;
 using VertiCore.Infrastructure.Repositories;
 using VertiCore.Infrastructure.Services;
-using VertiCore.Application.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Services.AddAutoMapper(typeof(ClientMappingProfile));
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// AutoMapper 16.x
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<ClientMappingProfile>();
+    cfg.AddProfile<InvoiceMappingProfile>();
+    cfg.AddProfile<AuditLogMappingProfile>();
+});
 
 // CORS
 builder.Services.AddCors(options =>
