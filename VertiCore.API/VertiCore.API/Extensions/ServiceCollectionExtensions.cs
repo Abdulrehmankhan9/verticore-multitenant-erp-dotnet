@@ -13,6 +13,7 @@ using VertiCore.Application.Validators.Auth;
 using VertiCore.Infrastructure.Data;
 using VertiCore.Infrastructure.Repositories;
 using VertiCore.Infrastructure.Services;
+using VertiCore.API.Filters;
 
 namespace VertiCore.API.Extensions
 {
@@ -96,6 +97,10 @@ namespace VertiCore.API.Extensions
         public static IServiceCollection AddValidation(this IServiceCollection services)
         {
             services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add<ValidationFilter>();
+            });
             return services;
         }
 
