@@ -32,6 +32,7 @@ namespace VertiCore.API.Extensions
             services.AddScoped<IClientRepository, ClientRepository>();
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IInvoiceItemRepository, InvoiceItemRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
 
