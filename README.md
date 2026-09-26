@@ -22,7 +22,8 @@ role-based, real-time platform.
 - BCrypt (Password hashing)
 
 **Frontend:**
-- Next.js (React) — in progress
+- Next.js 16 (React 19, TypeScript) — active application at `verticore-web/`
+- ASP.NET Razor Pages — retained as the legacy UI in `VertiCore.Web/`
 
 **Architecture:**
 - Clean Architecture
@@ -37,19 +38,23 @@ VertiCore/
 ├── VertiCore.Application/     ← Services, DTOs, Interfaces, Validators
 ├── VertiCore.Infrastructure/  ← Database, Repositories, JWT, PDF, Email
 ├── VertiCore.API/             ← Controllers, Middleware, Extensions
-└── verticore-web/             ← Next.js Frontend (coming soon)
+├── VertiCore.Web/             ← Legacy ASP.NET Razor Pages UI
+└── verticore-web/             ← Active Next.js frontend
 ```
 
 ## Features
 - [x] Multi-tenant data isolation
 - [x] Role-based access (TenantAdmin, Manager, Staff)
-- [x] JWT Authentication (Register, Login, Invite User)
+- [x] JWT authentication (register, login, team invitations)
+- [x] Forgot/reset password with expiring, single-use reset tokens
 - [x] Client management (CRUD)
-- [x] Invoice & billing with PDF export
-- [x] Dashboard & reports
+- [x] Invoice creation, status updates, and tenant-scoped PDF export
+- [x] Role-specific dashboards for Tenant Admin/Manager and Staff
+- [x] Staff task assignment, assigned-task list, and status updates
+- [x] Global case-insensitive unique user email and duplicate-account checks
 - [x] Audit logging
-- [x] Email service (User invitations)
-- [ ] Next.js Frontend
+- [x] Email service (welcome, invitation, and password-reset links)
+- [x] Next.js frontend (landing, auth, clients, invoices, users, tasks, dashboard, audit)
 - [ ] Deployment
 
 ## Progress
@@ -58,8 +63,44 @@ VertiCore/
 - [x] Phase 2 — Application layer (Services, DTOs, Validators, Mappings)
 - [x] Phase 3 — Infrastructure layer (Repositories, JWT, PDF, Email)
 - [x] Phase 4 — API layer (Controllers, Middleware, Extensions)
-- [ ] Phase 5 — Next.js Frontend
+- [x] Phase 5 — Next.js Frontend
 - [ ] Phase 6 — Deploy
+
+## Frontend Routes
+- `/` — public landing page
+- `/login`, `/register` — authentication and tenant registration
+- `/forgot-password`, `/reset-password` — password recovery
+- `/dashboard` — role-specific overview
+- `/clients` — client create, edit, and delete
+- `/invoices`, `/invoices/new` — invoice list, status, PDF, and creation
+- `/tasks` — task assignment for managers and status updates for staff
+- `/users` — team list and invitations
+- `/audit` — tenant audit log (Tenant Admin)
+
+The Razor Pages app is retained for reference; the Next.js app is the active frontend.
+
+## Local Development
+Run the frontend from the repository root:
+
+```powershell
+npm.cmd --prefix .\verticore-web run dev -- --hostname 0.0.0.0 --port 3000
+```
+
+Run the API using its HTTPS profile from the repository root:
+
+```powershell
+dotnet run --project .\VertiCore.API\VertiCore.API\VertiCore.API.csproj --launch-profile https
+```
+
+The API expects PostgreSQL configuration in `VertiCore.API/VertiCore.API/appsettings.json` and local email credentials in .NET User Secrets. The development frontend URL is `http://localhost:3000`.
+
+Apply pending database migrations from the repository root:
+
+```powershell
+dotnet ef database update --project .\VertiCore.Infrastructure\VertiCore.Infrastructure\VertiCore.Infrastructure.csproj --startup-project .\VertiCore.API\VertiCore.API\VertiCore.API.csproj
+```
+
+The unique-email migration stops if existing duplicate emails are found; resolve those accounts before applying it.
 
 ## Complete Structure
 
