@@ -4,3 +4,11 @@ obj/
 *.user
 Planning.txt
 appsettings.Development.json
+
+# Next.js
+.next/
+verticore-web/.next/
+verticore-web/node_modules/
+
+# Production secrets
+appsettings.Production.json
