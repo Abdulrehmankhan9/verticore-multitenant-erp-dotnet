@@ -2,7 +2,7 @@ namespace VertiCore.Application.Interfaces.Services
 {
     public interface IPdfService
     {
-        byte[] GenerateInvoicePdf(Guid invoiceId);
+        byte[] GenerateInvoicePdf(Guid invoiceId, Guid tenantId);
     }
 }
 

@@ -232,7 +232,7 @@ export default function NewInvoicePage() {
           </div>
 
           <div className={styles.formFooter}>
-            <div className={styles.total}><span>Invoice total</span><strong>${total.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
+            <div className={styles.total}><span>Invoice total</span><strong>PKR {total.toLocaleString("en-PK", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
             <button className="primary-button" type="submit" disabled={saving || clients.length === 0}>
               {saving ? "Creating..." : "Create invoice"}
             </button>

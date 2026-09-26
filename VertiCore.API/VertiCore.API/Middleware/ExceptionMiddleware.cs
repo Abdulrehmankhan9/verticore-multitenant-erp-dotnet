@@ -35,7 +35,9 @@ namespace VertiCore.API.Middleware
                 ValidationException => HttpStatusCode.BadRequest,
                 ClientNotFoundException => HttpStatusCode.NotFound,
                 InvoiceNotFoundException => HttpStatusCode.NotFound,
+                WorkTaskNotFoundException => HttpStatusCode.NotFound,
                 TenantNotFoundException => HttpStatusCode.NotFound,
+                DuplicateUserEmailException => HttpStatusCode.Conflict,
                 InvalidCredentialsException => HttpStatusCode.Unauthorized,
                 UnauthorizedAccessException => HttpStatusCode.Unauthorized,
                 _ => HttpStatusCode.InternalServerError

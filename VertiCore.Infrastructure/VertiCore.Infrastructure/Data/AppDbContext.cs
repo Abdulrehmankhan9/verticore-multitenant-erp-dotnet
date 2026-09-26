@@ -23,6 +23,7 @@ namespace VertiCore.Infrastructure.Data
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<UserInvitation> UserInvitations { get; set; }
+        public DbSet<WorkTask> WorkTasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,6 +52,26 @@ namespace VertiCore.Infrastructure.Data
                 .HasIndex(user => user.PasswordResetTokenHash)
                 .IsUnique()
                 .HasFilter("\"PasswordResetTokenHash\" IS NOT NULL");
+
+            modelBuilder.Entity<User>()
+                .HasIndex(user => user.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<WorkTask>()
+                .HasQueryFilter(task => _currentTenantService!.TenantId == null
+                    || task.TenantId == _currentTenantService.TenantId);
+
+            modelBuilder.Entity<WorkTask>()
+                .HasOne(task => task.Tenant)
+                .WithMany()
+                .HasForeignKey(task => task.TenantId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WorkTask>()
+                .HasOne(task => task.AssignedUser)
+                .WithMany()
+                .HasForeignKey(task => task.AssignedUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Cascade fix
             modelBuilder.Entity<Invoice>()

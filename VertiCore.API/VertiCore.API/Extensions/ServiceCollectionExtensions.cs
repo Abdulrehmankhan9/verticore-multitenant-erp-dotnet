@@ -48,6 +48,7 @@ namespace VertiCore.API.Extensions
             services.AddScoped<ICurrentTenantService, CurrentTenantService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITaskService, TaskService>();
             return services;
         }
 
@@ -81,6 +82,7 @@ namespace VertiCore.API.Extensions
                 options.AddPolicy("ManagerAndAbove", policy => policy.RequireRole("TenantAdmin", "Manager"));
                 options.AddPolicy("StaffAndAbove", policy => policy.RequireRole("TenantAdmin", "Manager", "Staff"));
                 options.AddPolicy("StaffOnly", policy => policy.RequireRole("Staff"));
+                options.AddPolicy("StaffAndManagers", policy => policy.RequireRole("TenantAdmin", "Manager", "Staff"));
             });
             return services;
         }

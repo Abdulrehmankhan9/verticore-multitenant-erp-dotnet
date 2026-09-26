@@ -263,11 +263,55 @@ namespace VertiCore.Infrastructure.Migrations
 
                     b.HasIndex("TenantId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("PasswordResetTokenHash")
                         .IsUnique()
                         .HasFilter("\"PasswordResetTokenHash\" IS NOT NULL");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("VertiCore.Domain.Entities.WorkTask", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AssignedUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedUserId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("WorkTasks");
                 });
 
             modelBuilder.Entity("VertiCore.Domain.Entities.UserInvitation", b =>
@@ -328,6 +372,25 @@ namespace VertiCore.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("PerformedBy");
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("VertiCore.Domain.Entities.WorkTask", b =>
+                {
+                    b.HasOne("VertiCore.Domain.Entities.User", "AssignedUser")
+                        .WithMany()
+                        .HasForeignKey("AssignedUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("VertiCore.Domain.Entities.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AssignedUser");
 
                     b.Navigation("Tenant");
                 });

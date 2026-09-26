@@ -3,19 +3,20 @@ using VertiCore.Application.DTOs.User;
 using VertiCore.Application.Interfaces.Services;
 using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Domain.Entities;
+using VertiCore.Domain.Exceptions;
 
 namespace VertiCore.Application.Services
 {
     public class UserService : IUserService
     {
         private readonly IRepository<UserInvitation> _invitationRepository;
-        private readonly IRepository<User> _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
         private readonly IRepository<Tenant> _tenantRepository;
 
         public UserService(
             IRepository<UserInvitation> invitationRepository,
-            IRepository<User> userRepository,
+            IUserRepository userRepository,
             IEmailService emailService,
             IRepository<Tenant> tenantRepository)
         {
@@ -27,12 +28,22 @@ namespace VertiCore.Application.Services
 
         public async Task InviteUserAsync(InviteUserRequest request, Guid tenantId)
         {
+            if (await _userRepository.GetByEmailAsync(request.Email.Trim()) != null)
+                throw new DuplicateUserEmailException();
+
+            var pendingInvitations = await _invitationRepository.GetAllAsync();
+            if (pendingInvitations.Any(invitation =>
+                !invitation.IsUsed &&
+                invitation.ExpiresAt > DateTime.UtcNow &&
+                string.Equals(invitation.Email.Trim(), request.Email.Trim(), StringComparison.OrdinalIgnoreCase)))
+                throw new DuplicateUserEmailException();
+
             var token = Guid.NewGuid().ToString();
 
             var invitation = new UserInvitation
             {
                 TenantId = tenantId,
-                Email = request.Email,
+                Email = request.Email.Trim().ToLowerInvariant(),
                 FullName = request.FullName,
                 Role = request.Role,
                 InvitationToken = token,
@@ -45,12 +56,22 @@ namespace VertiCore.Application.Services
 
             var tenant = await _tenantRepository.GetByIdAsync(tenantId);
 
-            await _emailService.SendInvitationEmailAsync(
-                request.Email,
-                request.FullName,
-                tenant?.Name ?? "VertiCore",
-                token
-            );
+            try
+            {
+                await _emailService.SendInvitationEmailAsync(
+                    invitation.Email,
+                    request.FullName,
+                    tenant?.Name ?? "VertiCore",
+                    token
+                );
+            }
+            catch
+            {
+                invitation.IsUsed = true;
+                _invitationRepository.Update(invitation);
+                await _invitationRepository.SaveChangesAsync();
+                throw;
+            }
         }
 
         public async Task SetPasswordAsync(SetPasswordRequest request)
@@ -64,11 +85,19 @@ namespace VertiCore.Application.Services
             if (invitation == null)
                 throw new Exception("Invalid or expired invitation token");
 
+            if (await _userRepository.GetByEmailAsync(invitation.Email) != null)
+            {
+                invitation.IsUsed = true;
+                _invitationRepository.Update(invitation);
+                await _invitationRepository.SaveChangesAsync();
+                throw new DuplicateUserEmailException();
+            }
+
             var user = new User
             {
                 TenantId = invitation.TenantId,
                 FullName = invitation.FullName,
-                Email = invitation.Email,
+                Email = invitation.Email.Trim().ToLowerInvariant(),
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Role = invitation.Role,
                 IsActive = true

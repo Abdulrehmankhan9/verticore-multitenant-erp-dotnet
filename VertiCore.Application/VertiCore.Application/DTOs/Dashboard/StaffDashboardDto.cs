@@ -5,6 +5,8 @@ namespace VertiCore.Application.DTOs.Dashboard
         public int TotalClientsCount { get; set; }
         public int ActiveClientsCount { get; set; }
         public int MyActionsThisWeek { get; set; }
+        public int AssignedTasksCount { get; set; }
+        public int OpenTasksCount { get; set; }
         public List<StaffActivityDto> RecentActivity { get; set; } = new();
     }
 

@@ -52,6 +52,7 @@ namespace VertiCore.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "ManagerAndAbove")]
         public async Task<IActionResult> Create(CreateClientRequest request)
         {
             var tenantId = GetTenantId();
@@ -62,6 +63,7 @@ namespace VertiCore.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "ManagerAndAbove")]
         public async Task<IActionResult> Update(Guid id, UpdateClientRequest request)
         {
             var tenantId = GetTenantId();
@@ -72,6 +74,7 @@ namespace VertiCore.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "ManagerAndAbove")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var tenantId = GetTenantId();

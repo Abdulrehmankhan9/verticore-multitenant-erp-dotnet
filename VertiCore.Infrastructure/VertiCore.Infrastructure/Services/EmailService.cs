@@ -34,6 +34,8 @@ namespace VertiCore.Infrastructure.Services
             var senderName = _configuration["EmailSettings:SenderName"];
 
             var client = CreateSmtpClient();
+            var baseUrl = _configuration["AppSettings:BaseUrl"]?.TrimEnd('/');
+            var loginLink = $"{baseUrl}/login";
 
             var message = new MailMessage
             {
@@ -108,7 +110,7 @@ namespace VertiCore.Infrastructure.Services
                                                 <tr>
                                                     <td align='center' 
                                                         style='background-color:#1a1a1a; border-radius:6px;'>
-                                                        <a href='https://localhost:7101/Auth/Login'
+                                                        <a href='{loginLink}'
                                                            style='display:inline-block; padding:14px 32px; 
                                                                   color:#ffffff; text-decoration:none; 
                                                                   font-size:15px; font-weight:bold;'>

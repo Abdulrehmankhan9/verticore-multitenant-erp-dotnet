@@ -11,15 +11,18 @@ namespace VertiCore.Application.Services
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IClientRepository _clientRepository;
         private readonly IRepository<AuditLog> _auditLogRepository;
+        private readonly IRepository<WorkTask> _taskRepository;
 
         public DashboardService(
             IInvoiceRepository invoiceRepository,
             IClientRepository clientRepository,
-            IRepository<AuditLog> auditLogRepository)
+            IRepository<AuditLog> auditLogRepository,
+            IRepository<WorkTask> taskRepository)
         {
             _invoiceRepository = invoiceRepository;
             _clientRepository = clientRepository;
             _auditLogRepository = auditLogRepository;
+            _taskRepository = taskRepository;
         }
 
         public async Task<DashboardDto> GetDashboardDataAsync(Guid tenantId)
@@ -87,12 +90,17 @@ namespace VertiCore.Application.Services
                 .ToList();
 
             var weekAgo = DateTime.UtcNow.AddDays(-7);
+            var assignedTasks = (await _taskRepository.GetAllAsync())
+                .Where(task => task.TenantId == tenantId && task.AssignedUserId == userId)
+                .ToList();
 
             return new StaffDashboardDto
             {
                 TotalClientsCount = tenantClients.Count,
                 ActiveClientsCount = tenantClients.Count(client => client.IsActive),
                 MyActionsThisWeek = recentActivity.Count(log => log.CreatedAt >= weekAgo),
+                AssignedTasksCount = assignedTasks.Count,
+                OpenTasksCount = assignedTasks.Count(task => task.Status != WorkTaskStatus.Completed),
                 RecentActivity = recentActivity
                     .Take(5)
                     .Select(log => new StaffActivityDto

@@ -4,6 +4,7 @@ using QuestPDF.Infrastructure;
 using VertiCore.Application.Interfaces.Services;
 using VertiCore.Application.Interfaces.Repositories;
 using VertiCore.Infrastructure.Data;
+using VertiCore.Domain.Exceptions;
 
 namespace VertiCore.Infrastructure.Services
 {
@@ -17,13 +18,14 @@ namespace VertiCore.Infrastructure.Services
             _context = context;
         }
 
-        public byte[] GenerateInvoicePdf(Guid invoiceId)
+        public byte[] GenerateInvoicePdf(Guid invoiceId, Guid tenantId)
         {
-            var invoice = _context.Invoices.Find(invoiceId);
+            var invoice = _context.Invoices.FirstOrDefault(item => item.Id == invoiceId && item.TenantId == tenantId);
             if (invoice == null)
-                throw new KeyNotFoundException("Invoice not found");
+                throw new InvoiceNotFoundException(invoiceId);
 
-            var client = _context.Clients.Find(invoice.ClientId);
+            var client = _context.Clients.FirstOrDefault(item =>
+                item.Id == invoice.ClientId && item.TenantId == tenantId);
 
             var document = Document.Create(container =>
             {
@@ -40,7 +42,7 @@ namespace VertiCore.Infrastructure.Services
                         column.Item().Text($"Client: {client?.FullName}");
                         column.Item().Text($"Due Date: {invoice.DueDate:dd MMM yyyy}");
                         column.Item().Text($"Status: {invoice.Status}");
-                        column.Item().Text($"Total Amount: PKR {invoice.TotalAmount:N0}");
+                        column.Item().Text($"Total Amount: PKR {invoice.TotalAmount:N2}");
                         column.Item().Text($"Notes: {invoice.Notes}");
                     });
 

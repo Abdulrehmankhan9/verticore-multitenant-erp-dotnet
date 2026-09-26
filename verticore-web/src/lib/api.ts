@@ -34,6 +34,21 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
   return (payload as ApiResponse<T>)?.data ?? (payload as T);
 }
 
+export async function apiDownload(path: string) {
+  const token = getAuthToken();
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    cache: "no-store",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+
+  if (!response.ok) {
+    const payload = await response.json().catch(() => null);
+    throw new Error(payload?.message || "Download failed");
+  }
+
+  return response.blob();
+}
+
 export function getAuthToken() {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("verticore_token");
@@ -57,6 +72,15 @@ export function getUserRole() {
   } catch {
     return null;
   }
+}
+
+export function subscribeToAuthChanges(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener("verticore-auth-change", callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener("verticore-auth-change", callback);
+  };
 }
 
 export function setAuthToken(token: string) {

@@ -35,9 +35,11 @@ namespace VertiCore.Application.Services
             var tenant = new Tenant
             {
                 Name = request.TenantName,
-                ContactEmail = request.Email,
+                ContactEmail = request.Email.Trim().ToLowerInvariant(),
                 IsActive = true
             };
+            if (await _userRepository.GetByEmailAsync(request.Email) != null)
+                throw new DuplicateUserEmailException();
 
             await _tenantRepository.AddAsync(tenant);
             await _tenantRepository.SaveChangesAsync();
@@ -46,7 +48,7 @@ namespace VertiCore.Application.Services
             {
                 TenantId = tenant.Id,
                 FullName = request.FullName,
-                Email = request.Email,
+                Email = request.Email.Trim().ToLowerInvariant(),
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Role = UserRole.TenantAdmin,
                 IsActive = true
@@ -75,10 +77,9 @@ namespace VertiCore.Application.Services
 
         public async Task<AuthResponse> LoginAsync(LoginRequest request)
         {
-            var users = await _userRepository.GetAllAsync();
-            var user = users.FirstOrDefault(u => u.Email == request.Email);
+            var user = await _userRepository.GetByEmailAsync(request.Email);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            if (user == null || !user.IsActive || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 throw new InvalidCredentialsException();
 
             var token = _jwtService.GenerateToken(user);
@@ -94,7 +95,7 @@ namespace VertiCore.Application.Services
 
         public async Task RequestPasswordResetAsync(ForgotPasswordRequest request)
         {
-            var user = await _userRepository.GetByEmailAsync(request.Email.Trim());
+            var user = await _userRepository.GetByEmailAsync(request.Email.Trim().ToLowerInvariant());
             if (user == null || !user.IsActive)
                 return;
 

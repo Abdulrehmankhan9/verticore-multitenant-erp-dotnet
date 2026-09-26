@@ -19,7 +19,7 @@ namespace VertiCore.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "TenantAdminOnly")]
+        [Authorize(Policy = "ManagerAndAbove")]
         public async Task<IActionResult> GetUsers()
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
@@ -34,7 +34,7 @@ namespace VertiCore.API.Controllers
         public async Task<IActionResult> InviteUser(InviteUserRequest request)
         {
             if (request.Role is not (UserRole.Manager or UserRole.Staff))
-                return BadRequest(ApiResponse<string>.Fail("This role cannot be assigned by a tenant administrator"));
+                return BadRequest(ApiResponse<string>.Fail("Only Manager and Staff roles can be invited"));
 
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
             var tenantId = Guid.Parse(tenantIdClaim!);

@@ -56,12 +56,25 @@ export type StaffDashboardData = {
   totalClientsCount: number;
   activeClientsCount: number;
   myActionsThisWeek: number;
+  assignedTasksCount: number;
+  openTasksCount: number;
   recentActivity: {
     action: string;
     entityName: string;
     details: string;
     createdAt: string;
   }[];
+};
+
+export type WorkTask = {
+  id: string;
+  assignedUserId: string;
+  assignedUserName: string;
+  title: string;
+  description: string;
+  dueDate: string | null;
+  status: number;
+  createdAt: string;
 };
 
 export type AuditLog = {

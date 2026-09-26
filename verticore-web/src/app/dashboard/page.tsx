@@ -61,7 +61,14 @@ export default function DashboardPage() {
         <div className="stats-grid">
           <div className="stat-card"><span>Workspace clients</span><strong>{data.totalClientsCount}</strong></div>
           <div className="stat-card"><span>Active clients</span><strong>{data.activeClientsCount}</strong></div>
+          <div className="stat-card"><span>Assigned tasks</span><strong>{data.assignedTasksCount}</strong></div>
+          <div className="stat-card"><span>Tasks to complete</span><strong>{data.openTasksCount}</strong></div>
           <div className="stat-card"><span>My actions this week</span><strong>{data.myActionsThisWeek}</strong></div>
+        </div>
+
+        <div className="panel">
+          <h3>Assigned work</h3>
+          <p className="dashboard-empty"><Link href="/tasks">View and update your assigned tasks</Link></p>
         </div>
 
         <div className="panel">

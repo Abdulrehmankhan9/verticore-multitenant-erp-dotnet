@@ -71,13 +71,16 @@ namespace VertiCore.API.Controllers
         [HttpGet("{id}/pdf")]
         public IActionResult DownloadPdf(Guid id)
         {
-            var pdfBytes = _pdfService.GenerateInvoicePdf(id);
+            var pdfBytes = _pdfService.GenerateInvoicePdf(id, GetTenantId());
             return File(pdfBytes, "application/pdf", $"invoice_{id}.pdf");
         }
 
         [HttpPut("{id}/status")]
         public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] InvoiceStatus status)
         {
+            if (!Enum.IsDefined(status))
+                return BadRequest(ApiResponse<string>.Fail("Invalid invoice status"));
+
             var tenantId = GetTenantId();
             var userId = GetUserId();
             await _invoiceService.UpdateStatusAsync(id, status, tenantId);

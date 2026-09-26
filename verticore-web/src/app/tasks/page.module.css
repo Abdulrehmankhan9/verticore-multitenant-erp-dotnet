@@ -1,0 +1,104 @@
+.assignForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.assignForm h3,
+.taskPanel h3 {
+  margin-bottom: 0;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.formGrid input,
+.formGrid select,
+.formGrid textarea,
+.taskRow select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0b1726;
+  color: var(--text);
+  padding: 10px 12px;
+}
+
+.formGrid textarea {
+  resize: vertical;
+}
+
+.descriptionField {
+  grid-column: 1 / -1;
+}
+
+.optional {
+  color: #8396ae;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.taskPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+}
+
+.taskRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  align-items: center;
+  gap: 20px;
+  padding: 17px 0;
+  border-top: 1px solid var(--border);
+}
+
+.taskCopy h4 {
+  font-size: 14px;
+}
+
+.taskCopy p {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.taskCopy > span,
+.emptyMessage {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 760px) {
+  .formGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .formGrid,
+  .taskRow {
+    grid-template-columns: 1fr;
+  }
+
+  .descriptionField {
+    grid-column: auto;
+  }
+}

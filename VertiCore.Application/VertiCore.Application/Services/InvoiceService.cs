@@ -60,6 +60,10 @@ namespace VertiCore.Application.Services
 
         public async Task<InvoiceDto> CreateAsync(CreateInvoiceRequest request, Guid tenantId)
         {
+            var client = await _clientRepository.GetByIdAsync(request.ClientId);
+            if (client == null || client.TenantId != tenantId || !client.IsActive)
+                throw new ClientNotFoundException(request.ClientId);
+
             var totalAmount = request.Items.Sum(i => i.Quantity * i.UnitPrice);
             var invoiceNumber = $"INV-{DateTime.UtcNow.Year}-{Guid.NewGuid().ToString()[..6].ToUpper()}";
 
@@ -88,8 +92,6 @@ namespace VertiCore.Application.Services
 
             await _invoiceItemRepository.AddRangeAsync(invoiceItems);
             await _invoiceItemRepository.SaveChangesAsync();
-
-            var client = await _clientRepository.GetByIdAsync(request.ClientId);
 
             return new InvoiceDto
             {

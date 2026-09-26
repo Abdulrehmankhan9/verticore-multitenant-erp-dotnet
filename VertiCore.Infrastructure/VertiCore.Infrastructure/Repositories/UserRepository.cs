@@ -13,8 +13,9 @@ namespace VertiCore.Infrastructure.Repositories
 
         public async Task<User?> GetByEmailAsync(string email)
         {
+            var normalizedEmail = email.Trim().ToLowerInvariant();
             return await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
+                .FirstOrDefaultAsync(user => user.Email == normalizedEmail);
         }
 
         public async Task<User?> GetByPasswordResetTokenHashAsync(string tokenHash)

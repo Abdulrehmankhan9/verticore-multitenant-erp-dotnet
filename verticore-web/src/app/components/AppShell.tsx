@@ -8,6 +8,7 @@ import { clearAuthToken, getUserRole } from "@/lib/api";
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/clients", label: "Clients" },
+  { href: "/tasks", label: "Tasks" },
   { href: "/invoices", label: "Invoices" },
   { href: "/users", label: "Users" },
   { href: "/audit", label: "Audit" },
@@ -36,7 +37,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isPublicRoute = pathname === "/" || pathname === "/login" || pathname === "/register" || pathname === "/forgot-password" || pathname === "/reset-password" || pathname === "/set-password";
   const role = useSyncExternalStore(subscribeToAuth, getAuthRoleSnapshot, getServerAuthRoleSnapshot);
   const visibleNavItems = navItems.filter((item) => {
-    if (item.href === "/dashboard" || item.href === "/clients") return true;
+    if (item.href === "/dashboard" || item.href === "/clients" || item.href === "/tasks") return true;
     if (role === "TenantAdmin") return true;
     if (role === "Manager") return item.href === "/invoices";
     return false;
