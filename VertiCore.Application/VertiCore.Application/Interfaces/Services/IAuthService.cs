@@ -6,6 +6,8 @@ namespace VertiCore.Application.Interfaces.Services
     {
         Task<AuthResponse> RegisterAsync(RegisterRequest request);
         Task<AuthResponse> LoginAsync(LoginRequest request);
+        Task RequestPasswordResetAsync(ForgotPasswordRequest request);
+        Task<bool> ResetPasswordAsync(ResetPasswordRequest request);
     }
 }
 

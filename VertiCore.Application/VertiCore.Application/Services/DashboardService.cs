@@ -1,6 +1,7 @@
 using VertiCore.Application.DTOs.Dashboard;
 using VertiCore.Application.Interfaces.Services;
 using VertiCore.Application.Interfaces.Repositories;
+using VertiCore.Domain.Entities;
 using VertiCore.Domain.Enums;
 
 namespace VertiCore.Application.Services
@@ -9,11 +10,16 @@ namespace VertiCore.Application.Services
     {
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IClientRepository _clientRepository;
+        private readonly IRepository<AuditLog> _auditLogRepository;
 
-        public DashboardService(IInvoiceRepository invoiceRepository, IClientRepository clientRepository)
+        public DashboardService(
+            IInvoiceRepository invoiceRepository,
+            IClientRepository clientRepository,
+            IRepository<AuditLog> auditLogRepository)
         {
             _invoiceRepository = invoiceRepository;
             _clientRepository = clientRepository;
+            _auditLogRepository = auditLogRepository;
         }
 
         public async Task<DashboardDto> GetDashboardDataAsync(Guid tenantId)
@@ -66,6 +72,37 @@ namespace VertiCore.Application.Services
                 OverdueInvoicesCount = overdueCount,
                 ActiveClientsCount = activeClientsCount,
                 TopClients = topClientsDto
+            };
+        }
+
+        public async Task<StaffDashboardDto> GetStaffDashboardDataAsync(Guid tenantId, Guid userId)
+        {
+            var tenantClients = (await _clientRepository.GetAllAsync())
+                .Where(client => client.TenantId == tenantId)
+                .ToList();
+
+            var recentActivity = (await _auditLogRepository.GetAllAsync())
+                .Where(log => log.TenantId == tenantId && log.UserId == userId)
+                .OrderByDescending(log => log.CreatedAt)
+                .ToList();
+
+            var weekAgo = DateTime.UtcNow.AddDays(-7);
+
+            return new StaffDashboardDto
+            {
+                TotalClientsCount = tenantClients.Count,
+                ActiveClientsCount = tenantClients.Count(client => client.IsActive),
+                MyActionsThisWeek = recentActivity.Count(log => log.CreatedAt >= weekAgo),
+                RecentActivity = recentActivity
+                    .Take(5)
+                    .Select(log => new StaffActivityDto
+                    {
+                        Action = log.Action,
+                        EntityName = log.EntityName,
+                        Details = log.Details,
+                        CreatedAt = log.CreatedAt
+                    })
+                    .ToList()
             };
         }
     }

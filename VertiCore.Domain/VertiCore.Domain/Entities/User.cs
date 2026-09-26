@@ -9,6 +9,8 @@ namespace VertiCore.Domain.Entities
         public string FullName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
+        public string? PasswordResetTokenHash { get; set; }
+        public DateTime? PasswordResetExpiresAt { get; set; }
         public UserRole Role { get; set; }
         public bool IsActive { get; set; } = true;
 

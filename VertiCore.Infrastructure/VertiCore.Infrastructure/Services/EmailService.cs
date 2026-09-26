@@ -201,7 +201,7 @@ namespace VertiCore.Infrastructure.Services
             var client = CreateSmtpClient();
 
             var baseUrl = _configuration["AppSettings:BaseUrl"];
-            var setPasswordLink = $"{baseUrl}/Auth/SetPassword?token={token}";
+            var setPasswordLink = $"{baseUrl}/set-password?token={Uri.EscapeDataString(token)}";
 
             var message = new MailMessage
             {
@@ -333,6 +333,34 @@ namespace VertiCore.Infrastructure.Services
                     </table>
                 </body>
                 </html>",
+                IsBodyHtml = true
+            };
+
+            message.To.Add(toEmail);
+            await client.SendMailAsync(message);
+        }
+
+        public async Task SendPasswordResetEmailAsync(string toEmail, string fullName, string token)
+        {
+            var senderEmail = _configuration["EmailSettings:SenderEmail"];
+            var senderName = _configuration["EmailSettings:SenderName"];
+            var baseUrl = _configuration["AppSettings:BaseUrl"]?.TrimEnd('/');
+            var resetLink = $"{baseUrl}/reset-password?token={Uri.EscapeDataString(token)}";
+
+            using var client = CreateSmtpClient();
+            using var message = new MailMessage
+            {
+                From = new MailAddress(senderEmail!, senderName),
+                Subject = "Reset your VertiCore password",
+                Body = $@"
+                    <html>
+                    <body style='font-family:Arial,sans-serif;color:#172033'>
+                        <h2>Hello {WebUtility.HtmlEncode(fullName)},</h2>
+                        <p>We received a request to reset your VertiCore password.</p>
+                        <p><a href='{resetLink}'>Reset your password</a></p>
+                        <p>This link expires in 30 minutes. If you did not request this, you can ignore this email.</p>
+                    </body>
+                    </html>",
                 IsBodyHtml = true
             };
 

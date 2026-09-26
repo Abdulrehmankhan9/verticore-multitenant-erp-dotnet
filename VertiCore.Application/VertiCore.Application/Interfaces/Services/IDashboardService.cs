@@ -5,6 +5,7 @@ namespace VertiCore.Application.Interfaces.Services
     public interface IDashboardService
     {
         Task<DashboardDto> GetDashboardDataAsync(Guid tenantId);
+        Task<StaffDashboardDto> GetStaffDashboardDataAsync(Guid tenantId, Guid userId);
     }
 }
 

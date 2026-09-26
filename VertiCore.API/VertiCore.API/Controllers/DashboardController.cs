@@ -9,7 +9,7 @@ namespace VertiCore.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = "ManagerAndAbove")]
+    [Authorize]
     public class DashboardController : ControllerBase
     {
         private readonly IDashboardService _dashboardService;
@@ -20,12 +20,23 @@ namespace VertiCore.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "ManagerAndAbove")]
         public async Task<IActionResult> GetDashboard()
         {
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
             var tenantId = Guid.Parse(tenantIdClaim!);
             var dashboard = await _dashboardService.GetDashboardDataAsync(tenantId);
             return Ok(ApiResponse<DashboardDto>.Ok(dashboard));
+        }
+
+        [HttpGet("staff")]
+        [Authorize(Policy = "StaffOnly")]
+        public async Task<IActionResult> GetStaffDashboard()
+        {
+            var tenantId = Guid.Parse(User.FindFirst("TenantId")!.Value);
+            var userId = Guid.Parse(User.FindFirst("UserId")!.Value);
+            var dashboard = await _dashboardService.GetStaffDashboardDataAsync(tenantId, userId);
+            return Ok(ApiResponse<StaffDashboardDto>.Ok(dashboard));
         }
     }
 }

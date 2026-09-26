@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using VertiCore.Application.DTOs;
 using VertiCore.Application.DTOs.User;
 using VertiCore.Application.Interfaces.Services;
+using VertiCore.Domain.Enums;
 
 namespace VertiCore.API.Controllers
 {
@@ -32,6 +33,9 @@ namespace VertiCore.API.Controllers
         [Authorize(Policy = "TenantAdminOnly")]
         public async Task<IActionResult> InviteUser(InviteUserRequest request)
         {
+            if (request.Role is not (UserRole.Manager or UserRole.Staff))
+                return BadRequest(ApiResponse<string>.Fail("This role cannot be assigned by a tenant administrator"));
+
             var tenantIdClaim = User.FindFirst("TenantId")?.Value;
             var tenantId = Guid.Parse(tenantIdClaim!);
 

@@ -26,7 +26,7 @@ namespace VertiCore.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Global Query Filters — har query pe evaluate hoga
+            // Global Query Filters ï¿½ har query pe evaluate hoga
             modelBuilder.Entity<Client>()
                 .HasQueryFilter(c => _currentTenantService!.TenantId == null
                     || c.TenantId == _currentTenantService.TenantId);
@@ -46,6 +46,11 @@ namespace VertiCore.Infrastructure.Data
             modelBuilder.Entity<User>()
                 .HasQueryFilter(u => _currentTenantService!.TenantId == null
                     || u.TenantId == _currentTenantService.TenantId);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(user => user.PasswordResetTokenHash)
+                .IsUnique()
+                .HasFilter("\"PasswordResetTokenHash\" IS NOT NULL");
 
             // Cascade fix
             modelBuilder.Entity<Invoice>()

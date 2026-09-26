@@ -1,0 +1,41 @@
+.clientForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.clientForm h3 {
+  margin-bottom: 0;
+}
+
+.clientFields {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: 100%;
+}
+
+.clientFields input {
+  min-width: 0;
+}
+
+.clientActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 800px) {
+  .clientFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .clientFields {
+    grid-template-columns: 1fr;
+  }
+
+  .clientActions,
+  .clientActions button {
+    width: 100%;
+  }
+}

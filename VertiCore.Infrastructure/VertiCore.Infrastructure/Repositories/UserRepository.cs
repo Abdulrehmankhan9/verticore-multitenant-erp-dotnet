@@ -17,6 +17,12 @@ namespace VertiCore.Infrastructure.Repositories
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
 
+        public async Task<User?> GetByPasswordResetTokenHashAsync(string tokenHash)
+        {
+            return await _context.Users
+                .FirstOrDefaultAsync(user => user.PasswordResetTokenHash == tokenHash);
+        }
+
         public async Task<User?> GetByIdAndTenantAsync(Guid id, Guid tenantId)
         {
             return await _context.Users

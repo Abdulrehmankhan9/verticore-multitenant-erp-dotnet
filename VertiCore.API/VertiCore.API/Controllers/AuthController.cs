@@ -30,5 +30,24 @@ namespace VertiCore.API.Controllers
             var result = await _authService.LoginAsync(request);
             return Ok(ApiResponse<AuthResponse>.Ok(result, "Login successful"));
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request)
+        {
+            await _authService.RequestPasswordResetAsync(request);
+            return Ok(ApiResponse<string>.Ok(
+                "If an account exists for that email, a reset link has been sent.",
+                "Password reset requested"));
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+        {
+            var reset = await _authService.ResetPasswordAsync(request);
+            if (!reset)
+                return BadRequest(ApiResponse<string>.Fail("Reset link is invalid or expired"));
+
+            return Ok(ApiResponse<string>.Ok("Password updated", "Password reset successfully"));
+        }
     }
 }

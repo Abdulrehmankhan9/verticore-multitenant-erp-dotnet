@@ -80,6 +80,7 @@ namespace VertiCore.API.Extensions
                 options.AddPolicy("TenantAdminOnly", policy => policy.RequireRole("TenantAdmin"));
                 options.AddPolicy("ManagerAndAbove", policy => policy.RequireRole("TenantAdmin", "Manager"));
                 options.AddPolicy("StaffAndAbove", policy => policy.RequireRole("TenantAdmin", "Manager", "Staff"));
+                options.AddPolicy("StaffOnly", policy => policy.RequireRole("Staff"));
             });
             return services;
         }
