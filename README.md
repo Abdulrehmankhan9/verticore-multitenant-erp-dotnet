@@ -210,5 +210,20 @@ VertiCore/
 │   │   └── TenantMiddleware.cs
 │   └── Program.cs
 │
-└── verticore-web/             ← Next.js (coming soon)
+└── verticore-web/ ← ActiveNext.js Frontend
+    ├── src/app/
+    │   ├── login/
+    │   ├── register/
+    │   ├── forgot-password/
+    │   ├── reset-password/
+    │   ├── dashboard/
+    │   ├── clients/
+    │   ├── invoices/
+    │   │   └── new/
+    │   ├── users/
+    │   ├── tasks/
+    │   └── audit/
+    ├── package.json
+    ├── tsconfig.json
+    └── next.config.ts
 ```

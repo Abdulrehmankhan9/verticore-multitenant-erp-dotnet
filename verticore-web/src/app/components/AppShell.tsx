@@ -34,10 +34,25 @@ function getServerAuthRoleSnapshot() {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const isPublicRoute = pathname === "/" || pathname === "/login" || pathname === "/register" || pathname === "/forgot-password" || pathname === "/reset-password" || pathname === "/set-password";
-  const role = useSyncExternalStore(subscribeToAuth, getAuthRoleSnapshot, getServerAuthRoleSnapshot);
+  const isPublicRoute =
+    pathname === "/" ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/forgot-password" ||
+    pathname === "/reset-password" ||
+    pathname === "/set-password";
+  const role = useSyncExternalStore(
+    subscribeToAuth,
+    getAuthRoleSnapshot,
+    getServerAuthRoleSnapshot
+  );
   const visibleNavItems = navItems.filter((item) => {
-    if (item.href === "/dashboard" || item.href === "/clients" || item.href === "/tasks") return true;
+    if (
+      item.href === "/dashboard" ||
+      item.href === "/clients" ||
+      item.href === "/tasks"
+    )
+      return true;
     if (role === "TenantAdmin") return true;
     if (role === "Manager") return item.href === "/invoices";
     return false;
@@ -55,12 +70,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-shell">
       <aside className="sidebar">
+
         <div className="brand-block">
-          <div className="brand-mark">V</div>
-          <div>
-            <p className="eyebrow">ERP</p>
-            <h2>VertiCore</h2>
-          </div>
+          <p className="eyebrow">ERP</p>
+          <h1>VertiCore</h1>
         </div>
 
         <nav className="nav">
@@ -68,14 +81,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
-              className={pathname === item.href ? "nav-item active" : "nav-item"}
+              className={
+                pathname === item.href ? "nav-item active" : "nav-item"
+              }
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <button type="button" className="logout-button" onClick={handleLogout}>
+        <button
+          type="button"
+          className="logout-button"
+          onClick={handleLogout}
+        >
           Logout
         </button>
       </aside>

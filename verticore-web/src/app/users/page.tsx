@@ -125,9 +125,11 @@ export default function UsersPage() {
             </select>
           </label>
         </div>
-        <button type="submit" className="primary-button" disabled={inviting}>
-          {inviting ? "Sending..." : "Send invitation"}
-        </button>
+        <div className={styles.formFooter}>
+          <button type="submit" className="primary-button" disabled={inviting}>
+            {inviting ? "Sending..." : "Send invitation"}
+          </button>
+        </div>
       </form>
 
       <div className="panel">

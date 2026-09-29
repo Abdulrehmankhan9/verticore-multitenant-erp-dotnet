@@ -92,7 +92,7 @@ export default function TasksPage() {
               <div className={styles.formGrid}>
                 <label>Task title<input value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} maxLength={160} required /></label>
                 <label>Assign to<select value={form.assignedUserId} onChange={(event) => setForm({ ...form, assignedUserId: event.target.value })} required>{staff.map((user) => <option key={user.id} value={user.id}>{user.fullName}</option>)}</select></label>
-                <label>Due date <span className={styles.optional}>Optional</span><input type="date" min={new Date().toISOString().slice(0, 10)} value={form.dueDate} onChange={(event) => setForm({ ...form, dueDate: event.target.value })} /></label>
+                <label>Due date <input type="date" min={new Date().toISOString().slice(0, 10)} value={form.dueDate} onChange={(event) => setForm({ ...form, dueDate: event.target.value })} /></label>
                 <label className={styles.descriptionField}>Description <span className={styles.optional}>Optional</span><textarea rows={2} value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} maxLength={2000} /></label>
               </div>
               <div className={styles.formActions}><button className="primary-button" type="submit" disabled={saving}>{saving ? "Assigning..." : "Assign task"}</button></div>

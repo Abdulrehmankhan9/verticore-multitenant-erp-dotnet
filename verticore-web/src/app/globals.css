@@ -63,13 +63,14 @@ input {
 
 .brand-block {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 2px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
 
-.brand-mark {
+/* .brand-mark {
   width: 42px;
   height: 42px;
   border-radius: 12px;
@@ -78,7 +79,7 @@ input {
   place-items: center;
   font-weight: 700;
   color: #07111d;
-}
+} */
 
 .brand-block h2 {
   font-size: 1.1rem;
@@ -86,7 +87,7 @@ input {
 
 .eyebrow {
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 1.00rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
