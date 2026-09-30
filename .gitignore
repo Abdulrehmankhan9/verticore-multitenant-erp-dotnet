@@ -4,6 +4,7 @@ obj/
 *.user
 Planning.txt
 appsettings.Development.json
+appsettings.Production.json
 
 # Next.js
 .next/
